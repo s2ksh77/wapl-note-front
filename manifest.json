@@ -1,0 +1,28 @@
+{
+  "packageName": "my-app",
+  "name": {
+    "en": "App Name",
+    "ko": "앱 이름"
+  },
+  "icon": "icon.svg",
+  "version": "0.0.1",
+  "entry": "src/index.tsx",
+  "widgets": [
+    {
+      "size": "small",
+      "name": {
+        "en": "Small Widget",
+        "ko": "작은 위젯"
+      },
+      "entry": "src/widgets/small/index.tsx"
+    },
+    {
+      "size": "medium",
+      "name": {
+        "en": "Medium Widget",
+        "ko": "중간 위젯"
+      },
+      "entry": "src/widgets/small/index.tsx"
+    }
+  ]
+}

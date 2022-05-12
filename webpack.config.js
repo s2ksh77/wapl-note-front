@@ -1,4 +1,5 @@
-const waplSDKConfig = require("@wapl/sdk/dist/webpack").module;
+const waplSDKConfig = require('@wapl/sdk/dist/webpack').module;
+const path = require('path');
 
 module.exports = (webpackConfigEnv, argv) => {
   return new waplSDKConfig({
@@ -9,6 +10,12 @@ module.exports = (webpackConfigEnv, argv) => {
      * 추가적인 웹팩 설정은 다음 필드를 사용해주세요.
      * ---------------------------------
      */
-    additionalWebpackConfig: {},
+    additionalWebpackConfig: {
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, 'src'),
+        },
+      },
+    },
   });
 };

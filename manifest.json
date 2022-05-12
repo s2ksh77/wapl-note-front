@@ -1,8 +1,8 @@
 {
-  "packageName": "my-app",
+  "packageName": "note",
   "name": {
-    "en": "App Name",
-    "ko": "앱 이름"
+    "en": "note",
+    "ko": "노트"
   },
   "icon": "icon.svg",
   "version": "0.0.1",

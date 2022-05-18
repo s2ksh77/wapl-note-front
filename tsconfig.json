@@ -12,7 +12,11 @@
     "jsx": "react-jsx",
     "declarationDir": "dist",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@mcomponents/*": ["src/mobile/components/*"],
+      "@mstyles/*": ["src/mobile/styles/*"],
+      "@mhooks/*": ["src/mobile/hooks/*"],
+      "@mconstant/*": ["src/mobile/constant/*"]
     }
   },
   "include": ["src"]

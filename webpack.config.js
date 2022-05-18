@@ -1,5 +1,6 @@
 const waplSDKConfig = require('@wapl/sdk/dist/webpack').module;
 const path = require('path');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = (webpackConfigEnv, argv) => {
   return new waplSDKConfig({
@@ -14,6 +15,18 @@ module.exports = (webpackConfigEnv, argv) => {
       resolve: {
         alias: {
           '@': path.resolve(__dirname, 'src'),
+          '@mcomponents': path.resolve(__dirname, 'src/mobile/components'),
+          '@mstyles': path.resolve(__dirname, 'src/mobile/styles'),
+          '@mhooks': path.resolve(__dirname, 'src/mobile/hooks'),
+          '@mconstant': path.resolve(__dirname, 'src/mobile/constant'),
+        },
+      },
+      plugins: [new NodePolyfillPlugin()],
+      devServer: {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+          'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
         },
       },
     },

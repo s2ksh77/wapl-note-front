@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useStore } from './useStore';
+import { useNoteStore } from '@wapl/note-core';
 import { ROUTES } from '../constant/routes';
 import useRoute from './useRoute';
 
@@ -17,7 +17,7 @@ const useSearch = (): Props => {
   const { navTab } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { noteStore } = useStore();
+  const { noteStore } = useNoteStore();
   const { routeTo } = useRoute();
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {

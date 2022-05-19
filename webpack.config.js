@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 const waplSDKConfig = require('@wapl/sdk/dist/webpack').module;
 const path = require('path');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');

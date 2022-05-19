@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Application } from '@wapl/sdk';
 import { Header, useRoomStore } from '@wapl/core';
 import { LoadingSpinner, styled } from '@wapl/ui';
-import { StoreProvider, RootStore } from '@wapl/note-core';
+import { StoreProvider } from '@wapl/note-core';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ROUTES, SEARCH_CHAPTER, SEARCH_PAGE, SEARCH_TAG } from '@mconstant/routes';
 import NoteHeader from '@mcomponents/header/NoteHeader';
@@ -20,8 +20,6 @@ const handleOnError = (err, info, props) => {
   console.log('handleError!');
 };
 
-const rootStore = new RootStore();
-
 const AppContainer = () => {
   const roomStore = useRoomStore();
 
@@ -35,7 +33,7 @@ const AppContainer = () => {
 
   return (
     <Application onMount={handleMount} onUnmount={handleUnMount} onError={handleOnError}>
-      <StoreProvider value={rootStore}>
+      <StoreProvider>
         <Header>
           <NoteHeader />
         </Header>

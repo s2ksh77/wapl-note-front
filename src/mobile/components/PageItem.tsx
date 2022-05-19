@@ -1,4 +1,4 @@
-import { useStore } from '@mhooks/useStore';
+import { useNoteStore } from '@wapl/note-core';
 import { Icon, Checkbox, styled, Chip } from '@wapl/ui';
 import {
   PageItemWrapper,
@@ -32,7 +32,7 @@ type Props = {
 };
 
 const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, tagList }) => {
-  const { pageStore } = useStore();
+  const { pageStore } = useNoteStore();
 
   return (
     <PageItemWrapper onClick={handleItemPress(page)}>

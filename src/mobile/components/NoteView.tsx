@@ -1,14 +1,12 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-promise-executor-return */
 import React, { useState, useLayoutEffect, useCallback, useEffect, Suspense } from 'react';
-import { useStore } from '@mhooks/useStore';
 import { Observer } from 'mobx-react';
 import { Icon } from '@wapl/ui';
 import { NoteViewBodyWrapper, Scrollable, NewChapterButtonWrapper } from '@mstyles/ContentStyle';
 import MenuList from '@mcomponents/MenuList';
 import NewChapterDialog from '@mcomponents/Dialog/InputDialog';
-import { ChapterModel } from '@wapl/note-core';
-import { useParams } from 'react-router-dom';
+import { useNoteStore, ChapterModel } from '@wapl/note-core';
 import useSearch from '@mhooks/useSearch';
 import useMultiSelect from '../hooks/useMultiSelect';
 import { NoteViewType } from '../@types/common';
@@ -23,7 +21,7 @@ const ChapterList = React.lazy(() => {
 });
 
 const NoteView: React.FC = () => {
-  const { noteViewStore, chapterStore } = useStore();
+  const { noteViewStore, chapterStore } = useNoteStore();
   const [title, setTitle] = useState('');
   const [newChapterButtonVisible, setNewChapterButtonVisible] = useState(true);
   const [isNewChapterDialogOpen, setIsNewChapterDialogOpen] = useState(false);

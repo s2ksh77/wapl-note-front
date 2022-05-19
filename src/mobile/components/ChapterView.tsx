@@ -1,6 +1,5 @@
 /* eslint-disable no-promise-executor-return */
 import React, { useState, useLayoutEffect, useEffect, Suspense } from 'react';
-import { useStore } from '@mhooks/useStore';
 import { observer } from 'mobx-react';
 // import PageList from '@mcomponents/PageList';
 import EmptyChapterView from '@mcomponents/EmptyChapterView';
@@ -10,7 +9,7 @@ import InputDialog from '@mcomponents/Dialog/InputDialog';
 import { ContentWrapper, Scrollable, NewChapterButtonWrapper as NewPageButtonWrapper } from '@mstyles/ContentStyle';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@wapl/ui';
-import { ChapterModel, PageModel } from '@wapl/note-core';
+import { useNoteStore, ChapterModel, PageModel } from '@wapl/note-core';
 import useMultiSelect from '../hooks/useMultiSelect';
 import NoteAppBar, { TLocation } from './NoteAppBar';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '../constant/routes';
@@ -18,7 +17,7 @@ import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 
 const ChapterView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
-  const { pageStore, chapterStore } = useStore();
+  const { pageStore, chapterStore } = useNoteStore();
   const {
     pathname,
     state: { id, isRecycleBin },
@@ -151,8 +150,8 @@ const ChapterView: React.FC = observer(() => {
   const handleDeletePage = async () => {
     const targetArray = getSelectedItems();
     const model = targetArray.map(id => new PageModel({ id }).response);
-    const res = await pageStore.deletePage(tempChannelId, model);
-    console.log(res);
+    // const res = await pageStore.deletePage(tempChannelId, model);
+    // console.log(res);
   };
 
   useEffect(() => {

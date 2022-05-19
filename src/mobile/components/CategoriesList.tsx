@@ -1,5 +1,5 @@
 // import { dummyTagList } from '@mdummies/tagList';
-import { useStore } from '@mhooks/useStore';
+import { useNoteStore } from '@wapl/note-core';
 import { observer } from 'mobx-react';
 import { Icon, Mui } from '@wapl/ui';
 import { ContentWrapper as CategoriesWrapper } from '@mstyles/ContentStyle';
@@ -7,7 +7,7 @@ import { CategoryIndex } from '@mstyles/BodyStyle';
 import TagChipContainer from './TagChipContainer';
 
 const CategoriesList: React.FC = observer(() => {
-  const { tagStore } = useStore();
+  const { tagStore } = useNoteStore();
 
   // 데이터 -> [KOR : [tagList], ENG : [tagList], NUM : [tagList], ETC : [tagList]
   const categoryinfo = {

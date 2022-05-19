@@ -16,16 +16,15 @@ import EditorTagList from '@mcomponents/EditorTagList';
 import BottomDrawer from '@mcomponents/BottomDrawer';
 import RenameDialog from '@mcomponents/Dialog/InputDialog';
 import { useLocation } from 'react-router-dom';
-import { useStore } from '@mhooks/useStore';
 import useRoute from '@mhooks/useRoute';
-import { PageModel } from '@wapl/note-core';
+import { useNoteStore, PageModel } from '@wapl/note-core';
 
 const PageView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
   const {
     state: { id, isNewPage, isRecycleBin },
   } = useLocation() as TLocation;
-  const { pageStore, tagStore } = useStore();
+  const { pageStore, tagStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);

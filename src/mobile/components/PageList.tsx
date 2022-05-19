@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore } from '@mhooks/useStore';
+import { useNoteStore } from '@wapl/note-core';
 import LongPressable from 'react-longpressable';
 import PageItem from '@mcomponents/PageItem';
 import { PageListWrapper, PageItemDivider } from '@mstyles/ListItemStyle';
@@ -31,7 +31,7 @@ type Props = {
 
 const PageList: React.FC<Props> = ({ pageList, isSelected, toggleSelected, isRecycleBin }) => {
   const navigate = useNavigate();
-  const { pageStore } = useStore();
+  const { pageStore } = useNoteStore();
   const { routeTo } = useRoute();
 
   const handleItemLongPress = id => () => {

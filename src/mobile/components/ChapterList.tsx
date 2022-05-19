@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useStore } from '@mhooks/useStore';
+import { useNoteStore } from '@wapl/note-core';
 import LongPressable from 'react-longpressable';
 import ChapterItem from '@mcomponents/ChapterItem';
 import { NoteViewChapterListWrapper } from '@mstyles/ListItemStyle';
@@ -45,7 +45,7 @@ const ChapterList: React.FC<Props> = ({
   panel = 'page',
 }) => {
   const navigate = useNavigate();
-  const { noteViewStore } = useStore();
+  const { noteViewStore } = useNoteStore();
   const { routeTo } = useRoute();
 
   const handleItemLongPress = useCallback(

@@ -66,5 +66,7 @@ const AppContainer = () => {
 export default AppContainer;
 
 const Body = styled.div`
-  padding: 20px;
+  // editor 영역에 영향을 주고 있어서, 우선 주석처리 했어요 죄송합니다.
+  // padding: 20px;
+  height: 100%;
 `;

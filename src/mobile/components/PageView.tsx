@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { Editor } from '@tinymce/tinymce-react';
+import Editor from '@mcomponents/Editor';
 import { Mui, Icon, Global } from '@wapl/ui';
 import {
   TalkNoteViewWrapper as EditorWrapper,
@@ -17,7 +17,10 @@ import BottomDrawer from '@mcomponents/BottomDrawer';
 import RenameDialog from '@mcomponents/Dialog/InputDialog';
 import { useLocation } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
-import { useNoteStore, PageModel } from '@wapl/note-core';
+import { useNoteStore, PageModel, TagModel } from '@wapl/note-core';
+import { TagDTO } from '@wapl/note-core/dist/dts/models/dto/TagDTO';
+
+const editingIcon = require('../assets/wapl-editing.gif');
 
 const PageView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
@@ -100,19 +103,15 @@ const PageView: React.FC = observer(() => {
 
   const fetchPageInfoList = async () => {
     await pageStore.fetchPageInfoList(id, tempChannelId);
+    tagStore.pageTagList= pageStore.pageInfo.tagList.map((tagData:TagDTO)=>new TagModel(tagData));
   };
 
   useLayoutEffect(() => {
     setNewPage(isNewPage);
     if (!isNewPage) {
       fetchPageInfoList();
-      tagStore.fetchPageTagList(id);
     }
   }, [isNewPage]);
-
-  const handleEditorChange = editorContent => {
-    pageStore.pageInfo.content = editorContent;
-  };
 
   const savePage = () => {
     pageStore.savePage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo, isNewPage);
@@ -151,40 +150,23 @@ const PageView: React.FC = observer(() => {
           { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
         ]}
       />
-      <EditorWrapper style={{ padding: '72px 16px 32px 16px' }}>
-        <TitleWrapper>
+      <EditorWrapper style={{ padding: '72px 0px 0px 0px' }}>
+        <TitleWrapper style={{padding: '0px 16px 0px 16px'}}>
           <Mui.IconButton style={{ padding: 0 }} onClick={handleBookmarkPress}>
             <Icon.BookmarkFill width={24} height={24} color={pageStore.pageInfo.favorite ? '#FCBB00' : '#ccc'} />
           </Mui.IconButton>
           <PageTitleInput value={pageStore.pageInfo.name} onChange={() => console.log('onChange')} />
         </TitleWrapper>
         <PageViewDivider style={{ margin: '12px 0 0 0' }} />
-        <ModifiedInfoWrapper style={{ padding: '8px 0 32px 0' }}>
+        <ModifiedInfoWrapper style={{ padding: '8px 16px 32px 16px' }}>
           <ModifiedDate style={{ flex: 1 }}>{pageStore.pageInfo.modifiedDate}</ModifiedDate>
-          <ModifiedUser>{pageStore.pageInfo.updatedUserId}</ModifiedUser>
+          {pageStore.pageInfo.editingUserId ? (
+            <img src={editingIcon} alt="" />
+          ) : (
+            <ModifiedUser>{pageStore.pageInfo.updatedUserId}</ModifiedUser>
+          )}
         </ModifiedInfoWrapper>
-        <Editor
-          apiKey="90655irb9nds5o8ycj2bpivk0v2y34e2oa6qta82nclxrnx3"
-          initialValue={pageStore.pageInfo.content}
-          init={{
-            height: '100%',
-            mobile: {
-              menubar: false,
-            },
-            toolbar: false,
-            statusbar: false,
-            content_style: `
-              body {
-                margin: 0;
-                font-size: 14px;
-                font-weight: 400;
-                color: #222;
-              }
-              p { margin: 0; }
-            `,
-          }}
-          onEditorChange={handleEditorChange}
-        />
+        <Editor />
       </EditorWrapper>
       <EditorTagList data={tagStore.pageTagList} />
       <BottomDrawer

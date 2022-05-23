@@ -21,7 +21,7 @@ const ChapterList = React.lazy(() => {
 });
 
 const NoteView: React.FC = () => {
-  const { noteViewStore, chapterStore } = useNoteStore();
+  const { noteViewStore, chapterStore, uiStore } = useNoteStore();
   const [title, setTitle] = useState('');
   const [newChapterButtonVisible, setNewChapterButtonVisible] = useState(true);
   const [isNewChapterDialogOpen, setIsNewChapterDialogOpen] = useState(false);
@@ -84,16 +84,21 @@ const NoteView: React.FC = () => {
   };
 
   const handleSearchVisible = () => {
+    // TODO: SearchBar 공통 헤더에 맞게 수정 필요
     setSearchBarViSible(!searchBarVisible);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     fetchChapterList();
+    uiStore.setHeaderInfo({
+      title: '내 노트',
+      rightSide: [{ action: 'search', onClick: () => console.log('search') }],
+    });
   }, []);
 
   return (
     <>
-      <Observer>
+      {/* <Observer>
         {() =>
           noteViewStore.isLongPressed ? (
             <NoteAppBar
@@ -130,7 +135,7 @@ const NoteView: React.FC = () => {
             />
           )
         }
-      </Observer>
+      </Observer> */}
       <NoteViewBodyWrapper>
         <Suspense fallback={<LoadingSpinner />}>
           <Scrollable>

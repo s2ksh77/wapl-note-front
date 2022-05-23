@@ -17,7 +17,7 @@ import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 
 const ChapterView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
-  const { pageStore, chapterStore, tagStore } = useNoteStore();
+  const { pageStore, chapterStore, tagStore, uiStore } = useNoteStore();
   const {
     pathname,
     state: { id, isRecycleBin, tagId },
@@ -117,6 +117,8 @@ const ChapterView: React.FC = observer(() => {
   };
 
   const fetchList = async id => {
+    const searchButtonInfo = { action: 'search', onClick: () => console.log('search') };
+    const moreButtonInfo = { action: 'more', onClick: () => setIsMoreDrawerOpen(true) };
     let res;
     if (tagId) {
       res = await tagStore.fetchTagPageList(tagId, tempChannelId);
@@ -129,6 +131,11 @@ const ChapterView: React.FC = observer(() => {
         res = await chapterStore.getChapterInfoList(id, tempChannelId);
         setPageList(res.pageList);
         setChapterName(res.name);
+        uiStore.setHeaderInfo({
+          title: res.name,
+          leftSide: [{ action: 'back' }],
+          rightSide: [searchButtonInfo, moreButtonInfo],
+        });
         break;
       case MENU_TALKNOTE:
         // TODO
@@ -137,11 +144,19 @@ const ChapterView: React.FC = observer(() => {
         res = await pageStore.getBookmarkInChannel(tempChannelId);
         setPageList(res);
         setChapterName('즐겨 찾기');
+        uiStore.setHeaderInfo({
+          title: '즐겨 찾기',
+          rightSide: [searchButtonInfo],
+        });
         break;
       case MENU_RECENT:
         res = await pageStore.getRecentList(tempChannelId, 10);
         setPageList(res);
         setChapterName('최근');
+        uiStore.setHeaderInfo({
+          title: '최근',
+          rightSide: [searchButtonInfo],
+        });
         break;
       default:
     }
@@ -160,13 +175,13 @@ const ChapterView: React.FC = observer(() => {
     // console.log(res);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     fetchList(id);
   }, [navTab]);
 
   return (
     <>
-      {pageStore.isLongPressed ? (
+      {/* {pageStore.isLongPressed ? (
         <NoteAppBar
           title={`${getSelectedCount()}개 선택됨`}
           isLongPress
@@ -186,7 +201,7 @@ const ChapterView: React.FC = observer(() => {
             { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
           ]}
         />
-      )}
+      )} */}
       <ContentWrapper>
         <Suspense
           fallback={

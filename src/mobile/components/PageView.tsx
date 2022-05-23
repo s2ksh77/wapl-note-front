@@ -24,7 +24,7 @@ const PageView: React.FC = observer(() => {
   const {
     state: { id, isNewPage, isRecycleBin },
   } = useLocation() as TLocation;
-  const { pageStore, tagStore } = useNoteStore();
+  const { pageStore, tagStore, uiStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -129,17 +129,10 @@ const PageView: React.FC = observer(() => {
     }
   };
 
-  return (
-    <>
-      <Global
-        styles={{
-          '.tox-tinymce': {
-            border: 'none !important',
-          },
-        }}
-      />
-      <NoteAppBar
-        rightSide={[
+  useLayoutEffect(() => {
+    uiStore.setHeaderInfo({
+      leftSide: [{ action: 'back' }],
+      rightSide: [
           {
             action: 'search',
             onClick: () => {
@@ -149,7 +142,18 @@ const PageView: React.FC = observer(() => {
             },
           },
           { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
-        ]}
+      ],
+    });
+  }, []);
+
+  return (
+    <>
+      <Global
+        styles={{
+          '.tox-tinymce': {
+            border: 'none !important',
+          },
+        }}
       />
       <EditorWrapper style={{ padding: '72px 16px 32px 16px' }}>
         <TitleWrapper>

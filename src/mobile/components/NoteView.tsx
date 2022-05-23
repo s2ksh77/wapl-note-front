@@ -5,7 +5,7 @@ import { Observer } from 'mobx-react';
 import { Icon } from '@wapl/ui';
 import { NoteViewBodyWrapper, Scrollable, NewChapterButtonWrapper } from '@mstyles/ContentStyle';
 import MenuList from '@mcomponents/MenuList';
-import NewChapterDialog from '@mcomponents/Dialog/InputDialog';
+import NewChapterDialog from '@mcomponents/dialog/InputDialog';
 import { useNoteStore, ChapterModel } from '@wapl/note-core';
 import useSearch from '@mhooks/useSearch';
 import useMultiSelect from '../hooks/useMultiSelect';

@@ -14,7 +14,7 @@ import { PageItemDivider as PageViewDivider } from '@mstyles/ListItemStyle';
 import NoteAppBar, { TLocation } from '@mcomponents/NoteAppBar';
 import EditorTagList from '@mcomponents/EditorTagList';
 import BottomDrawer from '@mcomponents/BottomDrawer';
-import RenameDialog from '@mcomponents/Dialog/InputDialog';
+import RenameDialog from '@mcomponents/dialog/InputDialog';
 import { useLocation } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
 import { useNoteStore, PageModel } from '@wapl/note-core';
@@ -133,15 +133,15 @@ const PageView: React.FC = observer(() => {
     uiStore.setHeaderInfo({
       leftSide: [{ action: 'back' }],
       rightSide: [
-          {
-            action: 'search',
-            onClick: () => {
-              console.log('search');
-              // 임시. 화면을 벗어나는 동작을 감지해서 저장하도록 수정 필요
-              savePage();
-            },
+        {
+          action: 'search',
+          onClick: () => {
+            console.log('search');
+            // 임시. 화면을 벗어나는 동작을 감지해서 저장하도록 수정 필요
+            savePage();
           },
-          { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
+        },
+        { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
       ],
     });
   }, []);

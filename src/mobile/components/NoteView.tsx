@@ -8,11 +8,11 @@ import MenuList from '@mcomponents/MenuList';
 import NewChapterDialog from '@mcomponents/dialog/InputDialog';
 import { useNoteStore, ChapterModel } from '@wapl/note-core';
 import useSearch from '@mhooks/useSearch';
+import SearchBar from '@mcomponents/header/SearchBar';
 import useMultiSelect from '../hooks/useMultiSelect';
 import { NoteViewType } from '../@types/common';
 import NoteAppBar from './NoteAppBar';
 import LoadingSpinner from './LoadingSpinner';
-import SearchBar from './SearchBar';
 // import ChapterList from '@mcomponents/ChapterList';
 
 // React.lazy 동작 안하려면 위에 import 부분 주석 해제, 이 부분 주석

@@ -4,6 +4,7 @@ import React from 'react';
 interface ITag {
   id: string;
   name: string;
+  tagCount: number;
 }
 
 type Props = {
@@ -21,6 +22,7 @@ const TagChipContainer: React.FC<Props> = ({ tagList, handlePressTag }) => {
           // onDelete={() => console.log('지워져요')}
           onClick={handlePressTag(tag.id)}
           type="filter"
+          highLightText={tag.tagCount}
           maxWidth={150}
         />
       ))}

@@ -3,10 +3,15 @@ import { useNoteStore } from '@wapl/note-core';
 import { observer } from 'mobx-react';
 import { Icon, Mui } from '@wapl/ui';
 import { ContentWrapper as CategoriesWrapper } from '@mstyles/ContentStyle';
+import { useNavigate } from 'react-router-dom';
 import { CategoryIndex } from '@mstyles/BodyStyle';
 import TagChipContainer from './TagChipContainer';
+import useRoute from '../hooks/useRoute';
+import { TAG_CHAPTER } from '../constant/routes';
 
 const CategoriesList: React.FC = observer(() => {
+  const navigate = useNavigate();
+  const { routeTo } = useRoute();
   const { tagStore } = useNoteStore();
 
   // 데이터 -> [KOR : [tagList], ENG : [tagList], NUM : [tagList], ETC : [tagList]
@@ -17,8 +22,10 @@ const CategoriesList: React.FC = observer(() => {
     ETC: '기타',
   };
 
-  const handlePressTag = (id: string) => () => {
-    console.log(id);
+  const handlePressTag = (tagId: string) => async () => {
+    navigate(routeTo(TAG_CHAPTER), {
+      state: { tagId },
+    });
   };
 
   return (

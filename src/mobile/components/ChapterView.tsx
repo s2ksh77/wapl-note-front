@@ -17,10 +17,10 @@ import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 
 const ChapterView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
-  const { pageStore, chapterStore } = useNoteStore();
+  const { pageStore, chapterStore, tagStore } = useNoteStore();
   const {
     pathname,
-    state: { id, isRecycleBin },
+    state: { id, isRecycleBin, tagId },
   } = useLocation() as TLocation;
   const navigation = useNavigate();
   const { navTab } = useParams();
@@ -118,6 +118,12 @@ const ChapterView: React.FC = observer(() => {
 
   const fetchList = async id => {
     let res;
+    if (tagId) {
+      res = await tagStore.fetchTagPageList(tagId, tempChannelId);
+      setPageList(res);
+      setChapterName('');
+      return;
+    }
     switch (navTab) {
       case MENU_MYNOTE:
         res = await chapterStore.getChapterInfoList(id, tempChannelId);

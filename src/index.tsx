@@ -4,7 +4,7 @@ import { Header, useRoomStore } from '@wapl/core';
 import { LoadingSpinner, styled } from '@wapl/ui';
 import { StoreProvider } from '@wapl/note-core';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ROUTES, SEARCH_CHAPTER, SEARCH_PAGE, SEARCH_TAG } from '@mconstant/routes';
+import { ROUTES, SEARCH_CHAPTER, SEARCH_PAGE, SEARCH_TAG, TAG_CHAPTER, TAG_PAGE } from '@mconstant/routes';
 import NoteHeader from '@mcomponents/header/NoteHeader';
 import Navigation from '@mcomponents/navigation/Navigation';
 
@@ -53,6 +53,8 @@ const AppContainer = () => {
                 <Route path={`/:navTab${SEARCH_CHAPTER}`} element={<ChapterView />} />
                 <Route path={`/:navTab${SEARCH_PAGE}`} element={<PageView />} />
                 <Route path={`/:navTab${SEARCH_TAG}`} element={<TagMenuView />} />
+                <Route path={`/:navTab${TAG_CHAPTER}`} element={<ChapterView />} />
+                <Route path={`/:navTab${TAG_PAGE}`} element={<PageView />} />
               </Routes>
               <Navigation />
             </Suspense>
@@ -65,6 +67,4 @@ const AppContainer = () => {
 
 export default AppContainer;
 
-const Body = styled.div`
-  padding: 20px;
-`;
+const Body = styled.div``;

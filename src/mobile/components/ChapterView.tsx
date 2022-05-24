@@ -117,7 +117,7 @@ const ChapterView: React.FC = observer(() => {
   };
 
   const fetchList = async id => {
-    const searchButtonInfo = { action: 'search', onClick: () => console.log('search') };
+    const searchButtonInfo = { action: 'search', onClick: () => uiStore.toggleSearchBar() };
     const moreButtonInfo = { action: 'more', onClick: () => setIsMoreDrawerOpen(true) };
     let res;
     if (tagId) {

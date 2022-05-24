@@ -1,5 +1,4 @@
 /* eslint-disable consistent-return */
-import useSearch from '@mhooks/useSearch';
 import {
   FilterChipContainer,
   NoteViewBodyWrapper as SearchViewBodyWrapper,
@@ -8,22 +7,17 @@ import {
 } from '@mstyles/ContentStyle';
 import { Chip, Icon, styled } from '@wapl/ui';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ROUTES } from '@mconstant/routes';
+import { useLocation } from 'react-router-dom';
 import { MenuType } from '../@types/common';
 import ChapterList from './ChapterList';
 import { TLocation } from './NoteAppBar';
 import PageList from './PageList';
 import RoomList from './RoomList';
-import SearchBar from './header/SearchBar';
 
 const SearchView: React.FC = () => {
   const {
-    state: { searchKey, searchResult },
+    state: { searchResult },
   } = useLocation() as TLocation;
-  const navigate = useNavigate();
-  const { navTab } = useParams();
-  const { handleCancel, handleChange, handleSearch, getValue } = useSearch();
   const [selectFilter, setSelectFilter] = useState('');
   const [filterChips, setFilterChips] = useState([]);
 
@@ -53,10 +47,6 @@ const SearchView: React.FC = () => {
       avatar: <Icon.Emoji6Color />,
     },
   ];
-
-  const handleSearchCancel = () => {
-    navigate(navTab ? `${navTab}` : `${ROUTES.MY_NOTE}`);
-  };
 
   const getLabel = () => {
     switch (selectFilter) {
@@ -131,7 +121,7 @@ const SearchView: React.FC = () => {
       case MenuType.TAG:
         return (
           <PageList
-            pageList={MenuType.PAGE ? searchResult?.pageList : searchResult?.tagList}
+            pageList={MenuType.PAGE === selectFilter ? searchResult?.pageList : searchResult?.tagList}
             isSelected={id => false}
             toggleSelected={() => console.log('')}
           />
@@ -167,26 +157,18 @@ const SearchView: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <SearchBar
-        value={searchKey || getValue}
-        onChange={handleChange}
-        onEnter={() => handleSearch(getValue)}
-        onCancel={() => handleCancel(handleSearchCancel)}
-      />
-      <SearchViewBodyWrapper>
-        <FilterChipContainer>
-          {filterChips.map(chip => {
-            return <SChip {...chip} type="filter" />;
-          })}
-        </FilterChipContainer>
-        <Scrollable>
-          <SearchResultWrapper>
-            <RenderView />
-          </SearchResultWrapper>
-        </Scrollable>
-      </SearchViewBodyWrapper>
-    </>
+    <SearchViewBodyWrapper>
+      <FilterChipContainer>
+        {filterChips.map(chip => {
+          return <SChip {...chip} type="filter" />;
+        })}
+      </FilterChipContainer>
+      <Scrollable>
+        <SearchResultWrapper>
+          <RenderView />
+        </SearchResultWrapper>
+      </Scrollable>
+    </SearchViewBodyWrapper>
   );
 };
 

@@ -136,7 +136,7 @@ const PageView: React.FC = observer(() => {
         {
           action: 'search',
           onClick: () => {
-            console.log('search');
+            uiStore.toggleSearchBar();
             // 임시. 화면을 벗어나는 동작을 감지해서 저장하도록 수정 필요
             savePage();
           },

@@ -29,8 +29,6 @@ const NoteView: React.FC = () => {
   const [sharedChapterList, setSharedChapterList] = useState([]);
   const [recycleBin, setRecycleBin] = useState([]);
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount } = useMultiSelect();
-  const [searchBarVisible, setSearchBarViSible] = useState(false);
-  const { handleCancel, handleChange, handleSearch, getValue } = useSearch();
 
   useLayoutEffect(() => {
     switch (noteViewStore.type) {
@@ -83,16 +81,11 @@ const NoteView: React.FC = () => {
     setRecycleBin(recycle);
   };
 
-  const handleSearchVisible = () => {
-    // TODO: SearchBar 공통 헤더에 맞게 수정 필요
-    setSearchBarViSible(!searchBarVisible);
-  };
-
   useLayoutEffect(() => {
     fetchChapterList();
     uiStore.setHeaderInfo({
       title: '내 노트',
-      rightSide: [{ action: 'search', onClick: () => console.log('search') }],
+      rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
     });
   }, []);
 

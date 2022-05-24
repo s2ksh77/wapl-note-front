@@ -205,7 +205,7 @@ export const PageRestoreViewButtonsWrapper = styled.div`
 `;
 
 export const FilterChipContainer = styled.div`
-  margin: 0px 16px;
+  margin: 16px 0px;
 `;
 
 export const SearchResultWrapper = styled.div`

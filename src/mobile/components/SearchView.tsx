@@ -15,7 +15,7 @@ import ChapterList from './ChapterList';
 import { TLocation } from './NoteAppBar';
 import PageList from './PageList';
 import RoomList from './RoomList';
-import SearchBar from './SearchBar';
+import SearchBar from './header/SearchBar';
 
 const SearchView: React.FC = () => {
   const {

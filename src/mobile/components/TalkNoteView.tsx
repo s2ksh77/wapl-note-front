@@ -1,9 +1,10 @@
 import { useState, useLayoutEffect } from 'react';
-import { AppBar, AppBarBackButton } from '@wapl/ui';
+import { useNoteStore } from '@wapl/note-core';
 import { TalkNoteViewWrapper } from '@mstyles/ContentStyle';
 import TalkNoteItem from '@mcomponents/TalkNoteItem';
 
 const TalkNoteView: React.FC = () => {
+  const { uiStore } = useNoteStore();
   const [rooms, setRooms] = useState([]);
 
   const fetchRoomList = () => {
@@ -37,17 +38,18 @@ const TalkNoteView: React.FC = () => {
 
   useLayoutEffect(() => {
     fetchRoomList();
+    uiStore.setHeaderInfo({
+      title: '톡 노트',
+      rightSide: [{ action: 'search', onClick: () => console.log('search') }],
+    });
   }, []);
 
   return (
-    <>
-      <AppBar leftSide={<AppBarBackButton />} title="톡 노트" />
-      <TalkNoteViewWrapper>
-        {rooms.map(room => (
-          <TalkNoteItem photo={room.photo} name={room.name} userCount={room.userCount} />
-        ))}
-      </TalkNoteViewWrapper>
-    </>
+    <TalkNoteViewWrapper>
+      {rooms.map(room => (
+        <TalkNoteItem photo={room.photo} name={room.name} userCount={room.userCount} />
+      ))}
+    </TalkNoteViewWrapper>
   );
 };
 

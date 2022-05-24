@@ -94,7 +94,6 @@ export const NoteViewMenuListItemWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   height: 48px;
-  margin: 0px 7.5px 0px 17px;
 `;
 
 export const NoteViewMenuListTitle = styled.div`
@@ -117,7 +116,7 @@ export const TalkNoteItemWrapper = styled.div`
   width: auto;
   height: fit-content;
   align-items: center;
-  margin: 15px 16px;
+  padding: 10px 0;
 `;
 
 export const RoomTitle = styled.span`

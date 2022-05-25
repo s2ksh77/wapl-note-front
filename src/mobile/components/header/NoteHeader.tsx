@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite';
 import { Icon, AppBar, AppBarButton, AppBarBackButton, AppBarCloseButton } from '@wapl/ui';
-import { Header, useRoomStore } from '@wapl/core';
 import { useNoteStore } from '@wapl/note-core';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import SearchBar from './SearchBar';

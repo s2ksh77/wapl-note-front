@@ -24,8 +24,8 @@ interface IPage {
 
 type Props = {
   pageList: Array<IPage>;
-  isSelected: (value: string) => boolean;
-  toggleSelected: (value: string) => void;
+  isSelected?: (value: string) => boolean;
+  toggleSelected?: (value: string) => void;
   isRecycleBin?: boolean;
 };
 
@@ -76,6 +76,8 @@ const PageList: React.FC<Props> = ({ pageList, isSelected, toggleSelected, isRec
 };
 
 PageList.defaultProps = {
+  isSelected: () => false,
+  toggleSelected: () => console.log('toggle error'),
   isRecycleBin: false,
 };
 

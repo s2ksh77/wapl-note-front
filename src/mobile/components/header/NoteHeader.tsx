@@ -57,7 +57,7 @@ const NoteHeader = observer(() => {
   };
 
   const handleSearchVisible = () => {
-    uiStore.setIsSearching(!uiStore.isSearching);
+    uiStore.toggleSearchBar();
     if (pathname.includes(SEARCH_DETAIL)) handelSearchCancel();
   };
 

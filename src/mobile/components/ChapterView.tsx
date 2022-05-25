@@ -116,6 +116,19 @@ const ChapterView: React.FC = observer(() => {
     deSelectAll();
   };
 
+  const handlePageCreate = () => {
+    navigation(`/${pathname.split('/')[1]}${ROUTES.PAGE_DETAIL}`, {
+      state: { panel: 'content', isNewPage: true },
+    });
+  };
+
+  const handlePageDelete = async () => {
+    const targetArray = getSelectedItems();
+    const model = targetArray.map(id => new PageModel({ id }).response);
+    // const res = await pageStore.deletePage(tempChannelId, model);
+    // console.log(res);
+  };
+
   const fetchList = async id => {
     const searchButtonInfo = { action: 'search', onClick: () => uiStore.toggleSearchBar() };
     const moreButtonInfo = { action: 'more', onClick: () => setIsMoreDrawerOpen(true) };
@@ -162,46 +175,36 @@ const ChapterView: React.FC = observer(() => {
     }
   };
 
-  const handleCreatePage = () => {
-    navigation(`/${pathname.split('/')[1]}${ROUTES.PAGE_DETAIL}`, {
-      state: { panel: 'content', isNewPage: true },
-    });
-  };
+  // 편집 모드에서 선택된 페이지 수 업데이트
+  useEffect(() => {
+    if (!pageStore.isLongPressed) return;
+    uiStore.setHeaderTitle(`${getSelectedCount()}개 선택됨`);
+  }, [getSelectedCount]);
 
-  const handleDeletePage = async () => {
-    const targetArray = getSelectedItems();
-    const model = targetArray.map(id => new PageModel({ id }).response);
-    // const res = await pageStore.deletePage(tempChannelId, model);
-    // console.log(res);
-  };
+  // 첫 렌더를 제외한 편집 모드 설정/해제 이후
+  useEffect(() => {
+    if (!chapterName) return;
+    if (!pageStore.isLongPressed) {
+      fetchList(id);
+      return;
+    }
+
+    uiStore.setHeaderInfo({
+      title: `${getSelectedCount()}개 선택됨`,
+      leftSide: [{ action: 'close', onClick: handleCloseButtonPress }],
+      rightSide: [
+        { action: 'delete', onClick: handlePageDelete },
+        { action: 'share', onClick: () => setIsShareDrawerOpen(true) },
+        { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
+      ],
+    });
+  }, [pageStore.isLongPressed]);
 
   useLayoutEffect(() => {
     fetchList(id);
   }, [navTab]);
 
   return (
-    <>
-      {/* {pageStore.isLongPressed ? (
-        <NoteAppBar
-          title={`${getSelectedCount()}개 선택됨`}
-          isLongPress
-          closeFn={handleCloseButtonPress}
-          rightSide={[
-            { action: 'delete', onClick: () => handleDeletePage() },
-            { action: 'share', onClick: () => setIsShareDrawerOpen(true) },
-            { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
-          ]}
-        />
-      ) : (
-        <NoteAppBar
-          title={chapterName}
-          isLongPress={false}
-          rightSide={[
-            { action: 'search', onClick: () => console.log('search') },
-            { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
-          ]}
-        />
-      )} */}
       <ContentWrapper>
         <Suspense
           fallback={
@@ -287,12 +290,11 @@ const ChapterView: React.FC = observer(() => {
           </>
         )}
         {newPageButtonVisible && ( // TODO: 전달 받은 챕터, 휴지통 때 unvisible
-          <NewPageButtonWrapper onClick={() => handleCreatePage()}>
+        <NewPageButtonWrapper onClick={handlePageCreate}>
             <Icon.Add2Fill width={48} height={48} color="#FF6258" />
           </NewPageButtonWrapper>
         )}
       </ContentWrapper>
-    </>
   );
 });
 

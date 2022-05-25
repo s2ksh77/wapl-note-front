@@ -47,10 +47,10 @@ const PageList: React.FC<Props> = ({ pageList, isSelected, toggleSelected, isRec
 
   const handleItemPress = id => () => {
     if (pageStore.isLongPressed) return;
-      navigate(routeTo('content'), {
-        state: { id, ...{ panel: 'content', isNewPage: false, isRecycleBin } },
-      });
-    };
+    navigate(routeTo('content'), {
+      state: { id, ...{ panel: 'content', isNewPage: false, isRecycleBin } },
+    });
+  };
 
   return (
     <PageListWrapper isList={!!pageList.length}>

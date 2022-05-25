@@ -7,11 +7,7 @@ import { NoteViewBodyWrapper, Scrollable, NewChapterButtonWrapper } from '@mstyl
 import MenuList from '@mcomponents/MenuList';
 import NewChapterDialog from '@mcomponents/dialog/InputDialog';
 import { useNoteStore, ChapterModel } from '@wapl/note-core';
-import useSearch from '@mhooks/useSearch';
-import SearchBar from '@mcomponents/header/SearchBar';
 import useMultiSelect from '../hooks/useMultiSelect';
-import { NoteViewType } from '../@types/common';
-import NoteAppBar from './NoteAppBar';
 import LoadingSpinner from './LoadingSpinner';
 import FilterChipContainer from './FilterChipContainer';
 // import ChapterList from '@mcomponents/ChapterList';
@@ -23,7 +19,6 @@ const ChapterList = React.lazy(() => {
 
 const NoteView: React.FC = () => {
   const { noteViewStore, chapterStore, uiStore } = useNoteStore();
-  const [title, setTitle] = useState('');
   const [newChapterButtonVisible, setNewChapterButtonVisible] = useState(true);
   const [isNewChapterDialogOpen, setIsNewChapterDialogOpen] = useState(false);
   const [chapterList, setChapterList] = useState([]);
@@ -32,22 +27,22 @@ const NoteView: React.FC = () => {
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount } = useMultiSelect();
   const [selectFilter, setSelectFilter] = useState('');
 
-  useLayoutEffect(() => {
-    switch (noteViewStore.type) {
-      case NoteViewType.TalkNote:
-        setTitle('톡 노트');
-        setNewChapterButtonVisible(true);
-        break;
-      case NoteViewType.SharedNote:
-        setTitle('공유 노트');
-        setNewChapterButtonVisible(false);
-        break;
-      default:
-        setTitle('내 노트');
-        setNewChapterButtonVisible(true);
-        break;
-    }
-  }, [noteViewStore.type]);
+  // useLayoutEffect(() => {
+  //   switch (noteViewStore.type) {
+  //     case NoteViewType.TalkNote:
+  //       setTitle('톡 노트');
+  //       setNewChapterButtonVisible(true);
+  //       break;
+  //     case NoteViewType.SharedNote:
+  //       setTitle('공유 노트');
+  //       setNewChapterButtonVisible(false);
+  //       break;
+  //     default:
+  //       setTitle('내 노트');
+  //       setNewChapterButtonVisible(true);
+  //       break;
+  //   }
+  // }, [noteViewStore.type]);
 
   const handleChapterCreate = useCallback(async name => {
     // TODO: response 데이터 동기화
@@ -111,58 +106,58 @@ const NoteView: React.FC = () => {
   }, []);
 
   return (
-      <NoteViewBodyWrapper>
-        <Observer>
-          {() =>
-            !uiStore.isSearching ? (
-              <Suspense fallback={<LoadingSpinner />}>
-                <Scrollable>
-                  <ChapterList
-                    chapterList={chapterList}
-                    isSelected={isSelected}
-                    toggleSelected={toggleSelected}
-                    showDivider
-                  />
-                  <ChapterList
-                    chapterList={sharedChapterList}
-                    isSelected={isSelected}
-                    toggleSelected={toggleSelected}
-                    showDivider
-                  />
-                  <MenuList>
-                    <ChapterList chapterList={recycleBin} showDivider={false} isRecycleBin />
-                  </MenuList>
-                </Scrollable>
-
-                {newChapterButtonVisible && (
-                  <NewChapterButtonWrapper onClick={() => setIsNewChapterDialogOpen(true)}>
-                    <Icon.Add2Fill width={48} height={48} color="#FF6258" />
-                  </NewChapterButtonWrapper>
-                )}
-                <NewChapterDialog
-                  open={isNewChapterDialogOpen}
-                  title="새 챕터"
-                  placeholder="새 챕터"
-                  buttons={[
-                    {
-                      variant: 'dismiss',
-                      text: '취소',
-                      onClick: () => setIsNewChapterDialogOpen(false),
-                    },
-                    {
-                      variant: 'confirm',
-                      text: '생성',
-                    onClick: (name: string) => handleChapterCreate(name),
-                    },
-                  ]}
+    <NoteViewBodyWrapper>
+      <Observer>
+        {() =>
+          !uiStore.isSearching ? (
+            <Suspense fallback={<LoadingSpinner />}>
+              <Scrollable>
+                <ChapterList
+                  chapterList={chapterList}
+                  isSelected={isSelected}
+                  toggleSelected={toggleSelected}
+                  showDivider
                 />
-              </Suspense>
-            ) : (
-              <FilterChipContainer selectFilter={selectFilter} setSelectFilter={setSelectFilter} />
-            )
-          }
-        </Observer>
-      </NoteViewBodyWrapper>
+                <ChapterList
+                  chapterList={sharedChapterList}
+                  isSelected={isSelected}
+                  toggleSelected={toggleSelected}
+                  showDivider
+                />
+                <MenuList>
+                  <ChapterList chapterList={recycleBin} showDivider={false} isRecycleBin />
+                </MenuList>
+              </Scrollable>
+
+              {newChapterButtonVisible && (
+                <NewChapterButtonWrapper onClick={() => setIsNewChapterDialogOpen(true)}>
+                  <Icon.Add2Fill width={48} height={48} color="#FF6258" />
+                </NewChapterButtonWrapper>
+              )}
+              <NewChapterDialog
+                open={isNewChapterDialogOpen}
+                title="새 챕터"
+                placeholder="새 챕터"
+                buttons={[
+                  {
+                    variant: 'dismiss',
+                    text: '취소',
+                    onClick: () => setIsNewChapterDialogOpen(false),
+                  },
+                  {
+                    variant: 'confirm',
+                    text: '생성',
+                    onClick: (name: string) => handleChapterCreate(name),
+                  },
+                ]}
+              />
+            </Suspense>
+          ) : (
+            <FilterChipContainer selectFilter={selectFilter} setSelectFilter={setSelectFilter} />
+          )
+        }
+      </Observer>
+    </NoteViewBodyWrapper>
   );
 };
 

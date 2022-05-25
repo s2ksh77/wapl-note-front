@@ -11,7 +11,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@wapl/ui';
 import { useNoteStore, ChapterModel, PageModel } from '@wapl/note-core';
 import useMultiSelect from '../hooks/useMultiSelect';
-import NoteAppBar, { TLocation } from './NoteAppBar';
+import { TLocation } from './NoteAppBar';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '../constant/routes';
 import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 
@@ -40,7 +40,7 @@ const ChapterView: React.FC = observer(() => {
     return new Promise(resolve => setTimeout(resolve, 300)).then(() => import('@mcomponents/PageList'));
   });
 
-  const shareItems: Array<IDrawerItem> = [
+  const shareItems: IDrawerItem[] = [
     {
       action: 'talk',
       text: '톡으로 전달',
@@ -53,14 +53,14 @@ const ChapterView: React.FC = observer(() => {
     },
   ];
 
-  const shareSubItems: Array<IDrawerItem> = [
+  const shareSubItems: IDrawerItem[] = [
     { action: 'app1', text: 'App Name', onClick: () => console.log('App') },
     { action: 'app2', text: 'App Name', onClick: () => console.log('App') },
     { action: 'app3', text: 'App Name', onClick: () => console.log('App') },
     { action: 'app4', text: 'App Name', onClick: () => console.log('App') },
   ];
 
-  const moreItems: Array<IDrawerItem> = [
+  const moreItems: IDrawerItem[] = [
     {
       action: 'rename',
       text: '이름 변경',
@@ -94,7 +94,7 @@ const ChapterView: React.FC = observer(() => {
     setIsMoreDrawerOpen(false);
   };
 
-  const moreItemsInEditMode: Array<IDrawerItem> = [
+  const moreItemsInEditMode: IDrawerItem[] = [
     {
       action: 'move',
       text: '페이지 이동',
@@ -103,7 +103,7 @@ const ChapterView: React.FC = observer(() => {
     { action: 'select', text: '전체 선택', onClick: handleSelectAllPress },
   ];
 
-  const moreItemsInRecycleBin: Array<IDrawerItem> = [
+  const moreItemsInRecycleBin: IDrawerItem[] = [
     {
       action: 'empty',
       text: '휴지통 비우기',
@@ -205,96 +205,96 @@ const ChapterView: React.FC = observer(() => {
   }, [navTab]);
 
   return (
-      <ContentWrapper>
-        <Suspense
-          fallback={
-            <PageLoadingSpinnerWrapper>
-              <LoadingSpinner />
-            </PageLoadingSpinnerWrapper>
-          }
-        >
-          <Scrollable>
-            <PageList
-              pageList={pageList}
-              isSelected={isSelected}
-              toggleSelected={toggleSelected}
-              isRecycleBin={isRecycleBin}
-            />
-          </Scrollable>
-        </Suspense>
-        {isRecycleBin ? (
+    <ContentWrapper>
+      <Suspense
+        fallback={
+          <PageLoadingSpinnerWrapper>
+            <LoadingSpinner />
+          </PageLoadingSpinnerWrapper>
+        }
+      >
+        <Scrollable>
+          <PageList
+            pageList={pageList}
+            isSelected={isSelected}
+            toggleSelected={toggleSelected}
+            isRecycleBin={isRecycleBin}
+          />
+        </Scrollable>
+      </Suspense>
+      {isRecycleBin ? (
+        <BottomDrawer
+          title="더보기"
+          items={moreItemsInRecycleBin}
+          open={isMoreDrawerOpen}
+          onClose={() => setIsMoreDrawerOpen(false)}
+        />
+      ) : (
+        <>
+          <BottomDrawer
+            title="사본 전달"
+            items={shareItems}
+            subItems={shareSubItems}
+            open={isShareDrawerOpen}
+            onClose={() => setIsShareDrawerOpen(false)}
+            layout="grid"
+          />
           <BottomDrawer
             title="더보기"
-            items={moreItemsInRecycleBin}
+            items={pageStore.isLongPressed ? moreItemsInEditMode : moreItems}
             open={isMoreDrawerOpen}
             onClose={() => setIsMoreDrawerOpen(false)}
           />
-        ) : (
-          <>
-            <BottomDrawer
-              title="사본 전달"
-              items={shareItems}
-              subItems={shareSubItems}
-              open={isShareDrawerOpen}
-              onClose={() => setIsShareDrawerOpen(false)}
-              layout="grid"
-            />
-            <BottomDrawer
-              title="더보기"
-              items={pageStore.isLongPressed ? moreItemsInEditMode : moreItems}
-              open={isMoreDrawerOpen}
-              onClose={() => setIsMoreDrawerOpen(false)}
-            />
-            <InputDialog
-              open={isRenameDialogOpen}
-              title="챕터 이름 변경"
-              value={chapterName}
-              buttons={[
-                {
-                  variant: 'dismiss',
-                  text: '취소',
-                  onClick: () => setIsRenameDialogOpen(false),
+          <InputDialog
+            open={isRenameDialogOpen}
+            title="챕터 이름 변경"
+            value={chapterName}
+            buttons={[
+              {
+                variant: 'dismiss',
+                text: '취소',
+                onClick: () => setIsRenameDialogOpen(false),
+              },
+              {
+                variant: 'confirm',
+                text: '변경',
+                onClick: async name => {
+                  setIsRenameDialogOpen(false);
+                  try {
+                    const res = await chapterStore.renameChapter(new ChapterModel({ id, name }), tempChannelId);
+                    setChapterName(res.name);
+                  } catch (error) {
+                    console.log('renameChapter error', error);
+                  }
                 },
-                {
-                  variant: 'confirm',
-                  text: '변경',
-                  onClick: async name => {
-                    setIsRenameDialogOpen(false);
-                    try {
-                      const res = await chapterStore.renameChapter(new ChapterModel({ id, name }), tempChannelId);
-                      setChapterName(res.name);
-                    } catch (error) {
-                      console.log('renameChapter error', error);
-                    }
-                  },
-                },
-              ]}
-            />
-            <DeleteDialog
-              open={isDeleteDialogOpen}
-              title="챕터 삭제"
-              content="챕터에 속한 페이지는 휴지통으로 이동됩니다."
-              buttons={[
-                {
-                  variant: 'dismiss',
-                  text: '취소',
-                  onClick: () => setIsDeleteDialogOpen(false),
-                },
-                {
-                  variant: 'confirm',
-                  text: '삭제',
-                  onClick: () => setIsDeleteDialogOpen(false),
-                },
-              ]}
-            />
-          </>
-        )}
-        {newPageButtonVisible && ( // TODO: 전달 받은 챕터, 휴지통 때 unvisible
+              },
+            ]}
+          />
+          <DeleteDialog
+            open={isDeleteDialogOpen}
+            title="챕터 삭제"
+            content="챕터에 속한 페이지는 휴지통으로 이동됩니다."
+            buttons={[
+              {
+                variant: 'dismiss',
+                text: '취소',
+                onClick: () => setIsDeleteDialogOpen(false),
+              },
+              {
+                variant: 'confirm',
+                text: '삭제',
+                onClick: () => setIsDeleteDialogOpen(false),
+              },
+            ]}
+          />
+        </>
+      )}
+      {newPageButtonVisible && ( // TODO: 전달 받은 챕터, 휴지통 때 unvisible
         <NewPageButtonWrapper onClick={handlePageCreate}>
-            <Icon.Add2Fill width={48} height={48} color="#FF6258" />
-          </NewPageButtonWrapper>
-        )}
-      </ContentWrapper>
+          <Icon.Add2Fill width={48} height={48} color="#FF6258" />
+        </NewPageButtonWrapper>
+      )}
+    </ContentWrapper>
   );
 });
 

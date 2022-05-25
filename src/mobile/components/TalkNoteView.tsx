@@ -40,7 +40,7 @@ const TalkNoteView: React.FC = () => {
     fetchRoomList();
     uiStore.setHeaderInfo({
       title: '톡 노트',
-      rightSide: [{ action: 'search', onClick: () => console.log('search') }],
+      rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
     });
   }, []);
 

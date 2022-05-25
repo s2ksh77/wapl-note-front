@@ -54,7 +54,7 @@ const PageList: React.FC<Props> = ({ pageList, isSelected, toggleSelected, isRec
     };
 
   return (
-    <PageListWrapper>
+    <PageListWrapper isList={!!pageList.length}>
       {pageList.map(page => (
         <React.Fragment key={page.id}>
           <LongPressable

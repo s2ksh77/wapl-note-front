@@ -34,12 +34,12 @@ const AppContainer = () => {
   return (
     <Application onMount={handleMount} onUnmount={handleUnMount} onError={handleOnError}>
       <StoreProvider>
-        <Header>
-          <NoteHeader />
-        </Header>
         <Body>
           <Router basename={BASENAME}>
             <Suspense fallback={<LoadingSpinner />}>
+              <Header>
+                <NoteHeader />
+              </Header>
               <Routes>
                 <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.MY_NOTE} />} />
                 <Route path={ROUTES.MY_NOTE} element={<NoteView />} />

@@ -11,7 +11,7 @@ const TagMenuView: React.FC = () => {
     uiStore.setHeaderInfo({
       title: '태그',
       leftSide: [{ action: 'back' }],
-      rightSide: [{ action: 'search', onClick: () => console.log('search') }],
+      rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
     });
   }, []);
 

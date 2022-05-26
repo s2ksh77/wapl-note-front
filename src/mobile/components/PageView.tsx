@@ -17,13 +17,17 @@ import BottomDrawer from '@mcomponents/BottomDrawer';
 import RenameDialog from '@mcomponents/dialog/InputDialog';
 import { useLocation } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
-import { useNoteStore, PageModel } from '@wapl/note-core';
+import { useNoteStore, PageModel, TagModel } from '@wapl/note-core';
 
 const PageView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
-  const {
-    state: { id, isNewPage, isRecycleBin },
-  } = useLocation() as TLocation;
+  // const {
+  //   state: { id, isNewPage, isRecycleBin },
+  // } = useLocation() as TLocation;
+  const { state } = useLocation() as TLocation;
+  const id = state?.id;
+  const isNewPage = state?.isNewPage;
+  const isRecycleBin = state?.isRecycleBin;
   const { pageStore, tagStore, uiStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
@@ -99,10 +103,17 @@ const PageView: React.FC = observer(() => {
   ];
 
   const fetchPageInfoList = async () => {
-    await pageStore.fetchPageInfoList(id, tempChannelId);
+    await pageStore.fetchPageInfoList(pageStore.currentId, tempChannelId);
+    tagStore.pageTagList = pageStore.pageInfo.tagList.map((tagData: any) => new TagModel(tagData));
   };
 
   useLayoutEffect(() => {
+    if (id) {
+      localStorage.setItem('noteParam', id);
+      pageStore.currentId = id;
+    } else {
+      pageStore.currentId = localStorage.getItem('noteParam');
+    }
     setNewPage(isNewPage);
     if (!isNewPage) {
       fetchPageInfoList();

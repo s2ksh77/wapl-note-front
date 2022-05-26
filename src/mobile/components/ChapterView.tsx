@@ -123,10 +123,12 @@ const ChapterView: React.FC = observer(() => {
   };
 
   const handlePageDelete = async () => {
-    const targetArray = getSelectedItems();
-    const model = targetArray.map(id => new PageModel({ id }).response);
-    // const res = await pageStore.deletePage(tempChannelId, model);
-    // console.log(res);
+    const item = getSelectedItems();
+    const model = item.map(pageId => new PageModel({ id: pageId, chapterId: id }));
+    await pageStore.throwPage(tempChannelId, model);
+    handleCloseButtonPress();
+
+    // TODO: Toast 팝업
   };
 
   const fetchList = async id => {

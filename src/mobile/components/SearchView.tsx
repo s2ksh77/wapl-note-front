@@ -59,13 +59,7 @@ const SearchView: React.FC = () => {
         );
       case MenuType.PAGE:
       case MenuType.TAG:
-        return (
-          <PageList
-            pageList={MenuType.PAGE === selectFilter ? searchResult?.pageList : searchResult?.tagList}
-            isSelected={id => false}
-            toggleSelected={() => console.log('')}
-          />
-        );
+        return <PageList pageList={MenuType.PAGE === selectFilter ? searchResult?.pageList : searchResult?.tagList} />;
       default:
         return <RenderAll />;
     }
@@ -82,8 +76,8 @@ const SearchView: React.FC = () => {
           showDivider
           panel="search_chapter"
         />
-        <PageList pageList={searchResult?.pageList} isSelected={id => false} toggleSelected={() => console.log('')} />
-        <PageList pageList={searchResult?.tagList} isSelected={id => false} toggleSelected={() => console.log('')} />
+        <PageList pageList={searchResult?.pageList} />
+        <PageList pageList={searchResult?.tagList} />
       </>
     );
   });

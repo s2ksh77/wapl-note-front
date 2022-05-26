@@ -27,7 +27,7 @@ interface ITag {
 type Props = {
   page: IPage;
   isSelected: (value: string) => boolean;
-  handleItemPress: (page: IPage) => () => void;
+  handleItemPress: (id: string) => () => void;
   tagList?: Array<ITag>;
 };
 
@@ -35,7 +35,7 @@ const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, tagList 
   const { pageStore } = useNoteStore();
 
   return (
-    <PageItemWrapper onClick={handleItemPress(page)}>
+    <PageItemWrapper onClick={handleItemPress(page.id)}>
       <PageItemHeaderWrapper>
         {pageStore.isLongPressed ? (
           <Checkbox checked={isSelected(page.id)} />

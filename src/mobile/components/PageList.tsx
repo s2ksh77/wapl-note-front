@@ -24,8 +24,8 @@ interface IPage {
 
 type Props = {
   pageList: Array<IPage>;
-  isSelected: (value: string) => boolean;
-  toggleSelected: (value: string) => void;
+  isSelected?: (value: string) => boolean;
+  toggleSelected?: (value: string) => void;
   isRecycleBin?: boolean;
 };
 
@@ -34,24 +34,23 @@ const PageList: React.FC<Props> = ({ pageList, isSelected, toggleSelected, isRec
   const { pageStore } = useNoteStore();
   const { routeTo } = useRoute();
 
-  const handleItemLongPress = id => () => {
+  const handleItemLongPress = (id: string) => () => {
     if (pageStore.isLongPressed) return;
     toggleSelected(id);
     pageStore.changeMode();
   };
 
-  const handleItemShortPress = page => () => {
-    toggleSelected(page.id);
+  const handleItemShortPress = (id: string) => () => {
+    if (!pageStore.isLongPressed) return;
+    toggleSelected(id);
   };
 
-  const handleItemPress =
-    ({ id }) =>
-    () => {
-      console.log(routeTo('content'));
-      navigate(routeTo('content'), {
-        state: { id, ...{ panel: 'content', isNewPage: false, isRecycleBin } },
-      });
-    };
+  const handleItemPress = id => () => {
+    if (pageStore.isLongPressed) return;
+    navigate(routeTo('content'), {
+      state: { id, ...{ panel: 'content', isNewPage: false, isRecycleBin } },
+    });
+  };
 
   return (
     <PageListWrapper isList={!!pageList.length}>
@@ -59,13 +58,13 @@ const PageList: React.FC<Props> = ({ pageList, isSelected, toggleSelected, isRec
         <React.Fragment key={page.id}>
           <LongPressable
             onLongPress={handleItemLongPress(page.id)}
-            onShortPress={() => console.log('short pressd')}
+            onShortPress={handleItemShortPress(page.id)}
             longPressTime={700}
           >
             <PageItem
               page={page}
               isSelected={isSelected}
-              handleItemPress={pageStore.isLongPressed ? handleItemShortPress : handleItemPress}
+              handleItemPress={handleItemPress}
               tagList={page.tagList ? page.tagList : []}
             />
           </LongPressable>
@@ -77,6 +76,8 @@ const PageList: React.FC<Props> = ({ pageList, isSelected, toggleSelected, isRec
 };
 
 PageList.defaultProps = {
+  isSelected: () => false,
+  toggleSelected: () => console.log('toggle error'),
   isRecycleBin: false,
 };
 

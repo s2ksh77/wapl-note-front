@@ -10,7 +10,7 @@ type Props = {
 const TalkNoteItem: React.FC<Props> = ({ photo, name, userCount }) => {
   return (
     <TalkNoteItemWrapper>
-      <Icon.UserFill width={42} height={42} color="#ebebeb" />
+      <Icon.UserFill width={36} height={36} color="#ebebeb" />
       <RoomTitle>{name}</RoomTitle>
       {userCount > 1 && <RoomUserCount>{userCount}</RoomUserCount>}
     </TalkNoteItemWrapper>

@@ -13,6 +13,9 @@ import {
   PANEL_SEARCH,
   CHAPTER_DETAIL,
   PAGE_DETAIL,
+  TAG_DETAIL,
+  TAG_CHAPTER,
+  TAG_PAGE,
 } from '@mconstant/routes';
 
 const useRoute = () => {
@@ -35,8 +38,10 @@ const useRoute = () => {
         return '';
       case PANEL_CONTENT:
         return PAGE_DETAIL; // TODO: tag 쪽 panel정의
+      case TAG_CHAPTER:
       case PANEL_SEARCH_CHAPTER:
         return CHAPTER_DETAIL;
+      case TAG_PAGE:
       case PANEL_SEARCH_PAGE:
         return PAGE_DETAIL;
       default:
@@ -52,13 +57,18 @@ const useRoute = () => {
       /:navTab/chapter, /:navTab/page, /:navTab/content
     case 3 : nested Route
       /:navTab/search/chapter, /:navTab/search/page, /:navTab/search/tag
+    case 4 : nested Route with tag
+      /:myNote/tag/chapter, /:myNote/tag/page, /:talkNote/tag/chapter, /:talkNote/tag/page
     panel (chapter, page, tag)
    */
 
   const routeTo = useCallback(
     (panel?: string) => {
+      console.log(pathname, panel, pathname.includes(TAG_DETAIL));
       if (pathname === navPath() && !panel) return pathname; // case 1
-      if (panel !== 'search' && !pathname.includes(SEARCH_DETAIL)) return `${navPath()}${panelPath(panel)}`; // case 2
+      if (panel !== 'search' && !pathname.includes(SEARCH_DETAIL) && !pathname.includes(TAG_DETAIL))
+        return `${navPath()}${panelPath(panel)}`; // case 2
+      if (pathname.includes(TAG_DETAIL)) return `${navPath()}${TAG_DETAIL}${panelPath(panel)}`; // case 4
       return `${navPath()}${SEARCH_DETAIL}${panelPath(panel)}`; // case 3
     },
     [navPath, panelPath, pathname],

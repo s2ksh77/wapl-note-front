@@ -22,6 +22,7 @@ export type TLocation = {
       pageList?: [];
       tagList?: [];
     };
+    tagId?: string;
   };
 };
 

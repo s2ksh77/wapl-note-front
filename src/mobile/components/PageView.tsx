@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState, useEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import Editor from '@mcomponents/Editor';
 import { Mui, Icon, Global } from '@wapl/ui';
@@ -14,7 +14,7 @@ import { PageItemDivider as PageViewDivider } from '@mstyles/ListItemStyle';
 import NoteAppBar, { TLocation } from '@mcomponents/NoteAppBar';
 import EditorTagList from '@mcomponents/EditorTagList';
 import BottomDrawer from '@mcomponents/BottomDrawer';
-import RenameDialog from '@mcomponents/Dialog/InputDialog';
+import RenameDialog from '@mcomponents/dialog/InputDialog';
 import { useLocation } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
 import { useNoteStore, PageModel, TagModel } from '@wapl/note-core';
@@ -27,7 +27,7 @@ const PageView: React.FC = observer(() => {
   const {
     state: { id, isNewPage, isRecycleBin },
   } = useLocation() as TLocation;
-  const { pageStore, tagStore } = useNoteStore();
+  const { pageStore, tagStore, uiStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -103,7 +103,7 @@ const PageView: React.FC = observer(() => {
 
   const fetchPageInfoList = async () => {
     await pageStore.fetchPageInfoList(id, tempChannelId);
-    tagStore.pageTagList= pageStore.pageInfo.tagList.map((tagData:TagDTO)=>new TagModel(tagData));
+    tagStore.pageTagList = pageStore.pageInfo.tagList.map((tagData: TagDTO) => new TagModel(tagData));
   };
 
   useLayoutEffect(() => {
@@ -128,6 +128,23 @@ const PageView: React.FC = observer(() => {
     }
   };
 
+  useLayoutEffect(() => {
+    uiStore.setHeaderInfo({
+      leftSide: [{ action: 'back' }],
+      rightSide: [
+        {
+          action: 'search',
+          onClick: () => {
+            uiStore.toggleSearchBar();
+            // 임시. 화면을 벗어나는 동작을 감지해서 저장하도록 수정 필요
+            savePage();
+          },
+        },
+        { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
+      ],
+    });
+  }, []);
+
   return (
     <>
       <Global
@@ -151,7 +168,7 @@ const PageView: React.FC = observer(() => {
         ]}
       />
       <EditorWrapper style={{ padding: '72px 0px 0px 0px' }}>
-        <TitleWrapper style={{padding: '0px 16px 0px 16px'}}>
+        <TitleWrapper style={{ padding: '0px 16px 0px 16px' }}>
           <Mui.IconButton style={{ padding: 0 }} onClick={handleBookmarkPress}>
             <Icon.BookmarkFill width={24} height={24} color={pageStore.pageInfo.favorite ? '#FCBB00' : '#ccc'} />
           </Mui.IconButton>

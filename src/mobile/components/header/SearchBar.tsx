@@ -1,6 +1,5 @@
 import React from 'react';
 import { SearchField, styled } from '@wapl/ui';
-import useSearch from '@mhooks/useSearch';
 
 interface Props {
   value: string;
@@ -29,7 +28,5 @@ export default React.memo(SearchBar);
 
 const SearchFieldWrapper = styled.div`
   display: flex;
-  padding: 12px 16px;
-  position: absolute;
   width: 100%;
 `;

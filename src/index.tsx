@@ -4,7 +4,7 @@ import { Header, useRoomStore } from '@wapl/core';
 import { LoadingSpinner, styled } from '@wapl/ui';
 import { StoreProvider } from '@wapl/note-core';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ROUTES, SEARCH_CHAPTER, SEARCH_PAGE, SEARCH_TAG } from '@mconstant/routes';
+import { ROUTES, SEARCH_CHAPTER, SEARCH_PAGE, SEARCH_TAG, TAG_CHAPTER, TAG_PAGE } from '@mconstant/routes';
 import NoteHeader from '@mcomponents/header/NoteHeader';
 import Navigation from '@mcomponents/navigation/Navigation';
 
@@ -34,12 +34,12 @@ const AppContainer = () => {
   return (
     <Application onMount={handleMount} onUnmount={handleUnMount} onError={handleOnError}>
       <StoreProvider>
-        <Header>
-          <NoteHeader />
-        </Header>
         <Body>
           <Router basename={BASENAME}>
             <Suspense fallback={<LoadingSpinner />}>
+              <Header>
+                <NoteHeader />
+              </Header>
               <Routes>
                 <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.MY_NOTE} />} />
                 <Route path={ROUTES.MY_NOTE} element={<NoteView />} />
@@ -53,6 +53,8 @@ const AppContainer = () => {
                 <Route path={`/:navTab${SEARCH_CHAPTER}`} element={<ChapterView />} />
                 <Route path={`/:navTab${SEARCH_PAGE}`} element={<PageView />} />
                 <Route path={`/:navTab${SEARCH_TAG}`} element={<TagMenuView />} />
+                <Route path={`/:navTab${TAG_CHAPTER}`} element={<ChapterView />} />
+                <Route path={`/:navTab${TAG_PAGE}`} element={<PageView />} />
               </Routes>
               <Navigation />
             </Suspense>
@@ -65,8 +67,4 @@ const AppContainer = () => {
 
 export default AppContainer;
 
-const Body = styled.div`
-  // editor 영역에 영향을 주고 있어서, 우선 주석처리 했어요 죄송합니다.
-  // padding: 20px;
-  height: 100%;
-`;
+const Body = styled.div``;

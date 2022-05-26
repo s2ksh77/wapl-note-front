@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useNoteStore } from '@wapl/note-core';
-import { ROUTES } from '../constant/routes';
 import useRoute from './useRoute';
 
 interface Props {
@@ -14,8 +13,6 @@ interface Props {
 
 const useSearch = (): Props => {
   const [value, setValue] = useState('');
-  const { navTab } = useParams();
-  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { noteStore } = useNoteStore();
   const { routeTo } = useRoute();

@@ -5,14 +5,15 @@ import { Observer } from 'mobx-react';
 import { Icon } from '@wapl/ui';
 import { NoteViewBodyWrapper, Scrollable, NewChapterButtonWrapper } from '@mstyles/ContentStyle';
 import MenuList from '@mcomponents/MenuList';
-import NewChapterDialog from '@mcomponents/Dialog/InputDialog';
+import NewChapterDialog from '@mcomponents/dialog/InputDialog';
 import { useNoteStore, ChapterModel } from '@wapl/note-core';
 import useSearch from '@mhooks/useSearch';
+import SearchBar from '@mcomponents/header/SearchBar';
 import useMultiSelect from '../hooks/useMultiSelect';
 import { NoteViewType } from '../@types/common';
 import NoteAppBar from './NoteAppBar';
 import LoadingSpinner from './LoadingSpinner';
-import SearchBar from './SearchBar';
+import FilterChipContainer from './FilterChipContainer';
 // import ChapterList from '@mcomponents/ChapterList';
 
 // React.lazy 동작 안하려면 위에 import 부분 주석 해제, 이 부분 주석
@@ -21,7 +22,7 @@ const ChapterList = React.lazy(() => {
 });
 
 const NoteView: React.FC = () => {
-  const { noteViewStore, chapterStore } = useNoteStore();
+  const { noteViewStore, chapterStore, uiStore } = useNoteStore();
   const [title, setTitle] = useState('');
   const [newChapterButtonVisible, setNewChapterButtonVisible] = useState(true);
   const [isNewChapterDialogOpen, setIsNewChapterDialogOpen] = useState(false);
@@ -29,8 +30,7 @@ const NoteView: React.FC = () => {
   const [sharedChapterList, setSharedChapterList] = useState([]);
   const [recycleBin, setRecycleBin] = useState([]);
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount } = useMultiSelect();
-  const [searchBarVisible, setSearchBarViSible] = useState(false);
-  const { handleCancel, handleChange, handleSearch, getValue } = useSearch();
+  const [selectFilter, setSelectFilter] = useState('');
 
   useLayoutEffect(() => {
     switch (noteViewStore.type) {
@@ -83,17 +83,17 @@ const NoteView: React.FC = () => {
     setRecycleBin(recycle);
   };
 
-  const handleSearchVisible = () => {
-    setSearchBarViSible(!searchBarVisible);
-  };
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     fetchChapterList();
+    uiStore.setHeaderInfo({
+      title: '내 노트',
+      rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
+    });
   }, []);
 
   return (
     <>
-      <Observer>
+      {/* <Observer>
         {() =>
           noteViewStore.isLongPressed ? (
             <NoteAppBar
@@ -130,50 +130,58 @@ const NoteView: React.FC = () => {
             />
           )
         }
-      </Observer>
+      </Observer> */}
       <NoteViewBodyWrapper>
-        <Suspense fallback={<LoadingSpinner />}>
-          <Scrollable>
-            <ChapterList
-              chapterList={chapterList}
-              isSelected={isSelected}
-              toggleSelected={toggleSelected}
-              showDivider
-            />
-            <ChapterList
-              chapterList={sharedChapterList}
-              isSelected={isSelected}
-              toggleSelected={toggleSelected}
-              showDivider
-            />
-            <MenuList>
-              <ChapterList chapterList={recycleBin} showDivider={false} isRecycleBin />
-            </MenuList>
-          </Scrollable>
+        <Observer>
+          {() =>
+            !uiStore.isSearching ? (
+              <Suspense fallback={<LoadingSpinner />}>
+                <Scrollable>
+                  <ChapterList
+                    chapterList={chapterList}
+                    isSelected={isSelected}
+                    toggleSelected={toggleSelected}
+                    showDivider
+                  />
+                  <ChapterList
+                    chapterList={sharedChapterList}
+                    isSelected={isSelected}
+                    toggleSelected={toggleSelected}
+                    showDivider
+                  />
+                  <MenuList>
+                    <ChapterList chapterList={recycleBin} showDivider={false} isRecycleBin />
+                  </MenuList>
+                </Scrollable>
 
-          {newChapterButtonVisible && (
-            <NewChapterButtonWrapper onClick={() => setIsNewChapterDialogOpen(true)}>
-              <Icon.Add2Fill width={48} height={48} color="#FF6258" />
-            </NewChapterButtonWrapper>
-          )}
-          <NewChapterDialog
-            open={isNewChapterDialogOpen}
-            title="새 챕터"
-            placeholder="새 챕터"
-            buttons={[
-              {
-                variant: 'dismiss',
-                text: '취소',
-                onClick: () => setIsNewChapterDialogOpen(false),
-              },
-              {
-                variant: 'confirm',
-                text: '생성',
-                onClick: (name: string) => handleCreateChapter(name),
-              },
-            ]}
-          />
-        </Suspense>
+                {newChapterButtonVisible && (
+                  <NewChapterButtonWrapper onClick={() => setIsNewChapterDialogOpen(true)}>
+                    <Icon.Add2Fill width={48} height={48} color="#FF6258" />
+                  </NewChapterButtonWrapper>
+                )}
+                <NewChapterDialog
+                  open={isNewChapterDialogOpen}
+                  title="새 챕터"
+                  placeholder="새 챕터"
+                  buttons={[
+                    {
+                      variant: 'dismiss',
+                      text: '취소',
+                      onClick: () => setIsNewChapterDialogOpen(false),
+                    },
+                    {
+                      variant: 'confirm',
+                      text: '생성',
+                      onClick: (name: string) => handleCreateChapter(name),
+                    },
+                  ]}
+                />
+              </Suspense>
+            ) : (
+              <FilterChipContainer selectFilter={selectFilter} setSelectFilter={setSelectFilter} />
+            )
+          }
+        </Observer>
       </NoteViewBodyWrapper>
     </>
   );

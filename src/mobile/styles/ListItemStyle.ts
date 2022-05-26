@@ -1,12 +1,12 @@
 import { styled } from '@wapl/ui';
 
-export const PageListWrapper = styled.div`
+export const PageListWrapper = styled.div<{ isList: boolean }>`
   display: flex;
   flex-direction: column;
   width: auto;
   height: fit-content;
-  border: 1px solid #ebebeb;
   border-radius: 10px;
+  border: ${({ isList }) => (isList ? '1px solid #ebebeb' : '0')};
   margin: 16px;
   padding: 0 10px;
   background: #fff;
@@ -94,7 +94,6 @@ export const NoteViewMenuListItemWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   height: 48px;
-  margin: 0px 7.5px 0px 17px;
 `;
 
 export const NoteViewMenuListTitle = styled.div`
@@ -117,7 +116,7 @@ export const TalkNoteItemWrapper = styled.div`
   width: auto;
   height: fit-content;
   align-items: center;
-  margin: 15px 16px;
+  padding: 10px 0;
 `;
 
 export const RoomTitle = styled.span`

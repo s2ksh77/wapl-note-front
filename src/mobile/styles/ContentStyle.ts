@@ -12,7 +12,7 @@ export const ContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   background: #fafafa;
-  padding: 56px 0;
+  // padding: 56px 0;
 `;
 
 export const NoteViewBodyWrapper = styled.div`
@@ -20,7 +20,7 @@ export const NoteViewBodyWrapper = styled.div`
   width: auto;
   height: 100%;
   flex-direction: column;
-  padding: 56px 0;
+  padding: 0 16px;
 `;
 
 export const Scrollable = styled.div`
@@ -41,6 +41,7 @@ export const TalkNoteViewWrapper = styled.div`
   width: 100%;
   height: 100%;
   background: #fff;
+  padding: 0 16px;
 `;
 
 export const PageViewWrapper = styled.div`
@@ -203,8 +204,8 @@ export const PageRestoreViewButtonsWrapper = styled.div`
   margin: 0px 16px 16px 16px;
 `;
 
-export const FilterChipContainer = styled.div`
-  margin: 0px 16px;
+export const FilterChipWrapper = styled.div`
+  margin: 16px 0px;
 `;
 
 export const SearchResultWrapper = styled.div`

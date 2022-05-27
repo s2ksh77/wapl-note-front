@@ -62,8 +62,7 @@ const PageView: React.FC = observer(() => {
       text: '삭제',
       onClick: async () => {
         try {
-          const res = await pageStore.throwPage(tempChannelId, pageStore.pageInfo);
-          console.log(`${res.name} 페이지가 휴지통으로 이동되었습니다.`);
+          await pageStore.throwPage(tempChannelId, [pageStore.pageInfo]);
           setIsMoreDrawerOpen(false);
           goBack();
         } catch (error) {
@@ -85,8 +84,7 @@ const PageView: React.FC = observer(() => {
         }
 
         try {
-          const res = await pageStore.restorePage(tempChannelId, pageStore.pageInfo);
-          console.log(`${res.name} 페이지가 복원되었습니다.`);
+          await pageStore.restorePage(tempChannelId, [pageStore.pageInfo]);
           setIsMoreDrawerOpen(false);
           goBack();
         } catch (error) {

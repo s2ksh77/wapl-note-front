@@ -24,9 +24,13 @@ const editingIcon = require('../assets/wapl-editing.gif');
 
 const PageView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
-  const {
-    state: { id, isNewPage, isRecycleBin },
-  } = useLocation() as TLocation;
+  // const {
+  //   state: { id, isNewPage, isRecycleBin },
+  // } = useLocation() as TLocation;
+  const { state } = useLocation() as TLocation;
+  const id = state?.id;
+  const isNewPage = state?.isNewPage;
+  const isRecycleBin = state?.isRecycleBin;
   const { pageStore, tagStore, uiStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
@@ -105,6 +109,12 @@ const PageView: React.FC = observer(() => {
   };
 
   useLayoutEffect(() => {
+    if (id) {
+      localStorage.setItem('noteParam', id);
+      pageStore.currentId = id;
+    } else {
+      pageStore.currentId = localStorage.getItem('noteParam');
+    }
     setNewPage(isNewPage);
     if (!isNewPage) {
       fetchPageInfoList();

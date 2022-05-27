@@ -18,10 +18,14 @@ import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 const ChapterView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
   const { pageStore, chapterStore, tagStore, uiStore } = useNoteStore();
-  const {
-    pathname,
-    state: { id, isRecycleBin, tagId },
-  } = useLocation() as TLocation;
+  // const {
+  //   pathname,
+  //   state: { id, isRecycleBin, tagId },
+  // } = useLocation() as TLocation;
+  const { pathname, state } = useLocation() as TLocation;
+  const id = state?.id;
+  const isRecycleBin = state?.isRecycleBin;
+  const tagId = state?.tagId;
   const navigation = useNavigate();
   const { navTab } = useParams();
 
@@ -187,7 +191,7 @@ const ChapterView: React.FC = observer(() => {
   useEffect(() => {
     if (!chapterName) return;
     if (!pageStore.isLongPressed) {
-      fetchList(id);
+      fetchList(chapterStore.currentId);
       return;
     }
 
@@ -203,7 +207,13 @@ const ChapterView: React.FC = observer(() => {
   }, [pageStore.isLongPressed]);
 
   useLayoutEffect(() => {
-    fetchList(id);
+    if (id) {
+      localStorage.setItem('noteParam', id);
+      chapterStore.currentId = id;
+    } else {
+      chapterStore.currentId = localStorage.getItem('noteParam');
+    }
+    fetchList(chapterStore.currentId);
   }, [navTab]);
 
   return (

@@ -67,4 +67,6 @@ const AppContainer = () => {
 
 export default AppContainer;
 
-const Body = styled.div``;
+const Body = styled.div`
+  height: 100%;
+`;

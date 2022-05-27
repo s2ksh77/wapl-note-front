@@ -154,19 +154,6 @@ const PageView: React.FC = observer(() => {
           },
         }}
       />
-      <NoteAppBar
-        rightSide={[
-          {
-            action: 'search',
-            onClick: () => {
-              console.log('search');
-              // 임시. 화면을 벗어나는 동작을 감지해서 저장하도록 수정 필요
-              savePage();
-            },
-          },
-          { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
-        ]}
-      />
       <EditorWrapper style={{ padding: '72px 0px 0px 0px' }}>
         <TitleWrapper style={{ padding: '0px 16px 0px 16px' }}>
           <Mui.IconButton style={{ padding: 0 }} onClick={handleBookmarkPress}>

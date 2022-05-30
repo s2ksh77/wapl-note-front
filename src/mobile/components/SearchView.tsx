@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import { NoteViewBodyWrapper as SearchViewBodyWrapper, Scrollable, SearchResultWrapper } from '@mstyles/ContentStyle';
-import { Chip, Icon, styled } from '@wapl/ui';
+import { useNoteStore } from '@wapl/note-core';
+import { Icon } from '@wapl/ui';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MenuType } from '../@types/common';
@@ -14,6 +15,7 @@ const SearchView: React.FC = () => {
   const {
     state: { searchResult },
   } = useLocation() as TLocation;
+  const { uiStore } = useNoteStore();
   const [selectFilter, setSelectFilter] = useState('');
 
   const roomList = [
@@ -81,6 +83,13 @@ const SearchView: React.FC = () => {
       </>
     );
   });
+
+  useEffect(() => {
+    if (uiStore.selectFilter) {
+      setSelectFilter(uiStore.selectFilter);
+      uiStore.setSelectFilter('');
+    }
+  }, []);
 
   return (
     <SearchViewBodyWrapper>

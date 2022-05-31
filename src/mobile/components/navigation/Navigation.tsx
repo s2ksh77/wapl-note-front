@@ -1,13 +1,14 @@
 import { NavigationWrapper, Tabs, Tab } from '@mstyles/FooterStyle';
 import { Icon } from '@wapl/ui';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import { TLocation } from '@mcomponents/NoteAppBar';
 import { ROUTES } from '@/mobile/constant/routes';
 import NavigationTabs from './NavigationTabs';
+import useRoute from '@/mobile/hooks/useRoute';
 
 const Navigation: React.FC = () => {
   const navigate = useNavigate();
-  // const location = useLocation() as TLocation;
+  const { isContent } = useRoute();
 
   const Navs = [
     {
@@ -37,7 +38,7 @@ const Navigation: React.FC = () => {
   ];
 
   return (
-    <NavigationWrapper isVisible>
+    <NavigationWrapper isVisible={!isContent}>
       <Tabs>
         <NavigationTabs buttons={Navs} />
       </Tabs>

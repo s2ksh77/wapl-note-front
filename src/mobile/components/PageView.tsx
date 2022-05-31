@@ -3,9 +3,9 @@ import { observer } from 'mobx-react';
 import Editor from '@mcomponents/Editor';
 import { Mui, Icon, Global } from '@wapl/ui';
 import {
-  TalkNoteViewWrapper as EditorWrapper,
-  PageViewWrapper as TitleWrapper,
-  PageViewWrapper as ModifiedInfoWrapper,
+  EditorWrapper,
+  TitleWrapper,
+  ModifiedInfoWrapper,
   PageTitleInput,
   ModifiedInfo as ModifiedDate,
   ModifiedInfo as ModifiedUser,
@@ -162,15 +162,15 @@ const PageView: React.FC = observer(() => {
           },
         }}
       />
-      <EditorWrapper style={{ padding: '72px 0px 0px 0px' }}>
-        <TitleWrapper style={{ padding: '0px 16px 0px 16px' }}>
+      <EditorWrapper isReadMode={!pageStore.pageInfo.editingUserId}>
+        <TitleWrapper>
           <Mui.IconButton style={{ padding: 0 }} onClick={handleBookmarkPress}>
             <Icon.BookmarkFill width={24} height={24} color={pageStore.pageInfo.favorite ? '#FCBB00' : '#ccc'} />
           </Mui.IconButton>
           <PageTitleInput value={pageStore.pageInfo.name} onChange={() => console.log('onChange')} />
         </TitleWrapper>
         <PageViewDivider style={{ margin: '12px 0 0 0' }} />
-        <ModifiedInfoWrapper style={{ padding: '8px 16px 32px 16px' }}>
+        <ModifiedInfoWrapper>
           <ModifiedDate style={{ flex: 1 }}>{pageStore.pageInfo.modifiedDate}</ModifiedDate>
           {pageStore.pageInfo.editingUserId ? (
             <img src={editingIcon} alt="" />
@@ -180,7 +180,7 @@ const PageView: React.FC = observer(() => {
         </ModifiedInfoWrapper>
         <Editor />
       </EditorWrapper>
-      <EditorTagList data={tagStore.pageTagList} />
+      <EditorTagList data={tagStore.pageTagList} isReadMode={!pageStore.pageInfo.editingUserId} />
       <BottomDrawer
         title="더보기"
         items={isRecycleBin ? moreItemsInRecycleBin : moreItems}

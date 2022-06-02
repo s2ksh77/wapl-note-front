@@ -15,6 +15,12 @@ import { TLocation } from './NoteAppBar';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '../constant/routes';
 import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 
+// React.lazy 동작 안하려면 위에 import 부분 주석 해제, 이 부분 주석
+// EmptyChapterView 잠시 빠짐
+const PageList = React.lazy(() => {
+  return new Promise(resolve => setTimeout(resolve, 1000)).then(() => import('@mcomponents/PageList'));
+});
+
 const ChapterView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
   const { pageStore, chapterStore, tagStore, uiStore } = useNoteStore();
@@ -37,12 +43,6 @@ const ChapterView: React.FC = observer(() => {
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  // React.lazy 동작 안하려면 위에 import 부분 주석 해제, 이 부분 주석
-  // EmptyChapterView 잠시 빠짐
-  const PageList = React.lazy(() => {
-    return new Promise(resolve => setTimeout(resolve, 300)).then(() => import('@mcomponents/PageList'));
-  });
 
   const shareItems: IDrawerItem[] = [
     {

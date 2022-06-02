@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+import { useNoteStore } from '@wapl/note-core';
 import { Chip, styled } from '@wapl/ui';
 import { useEffect, useState } from 'react';
 import { MenuType } from '../@types/common';
@@ -7,9 +8,11 @@ import { FilterChipWrapper } from '../styles/ContentStyle';
 type Props = {
   selectFilter: string;
   setSelectFilter: (value: string) => void;
+  isSearchView?: boolean;
 };
 
-const FilterChipContainer: React.FC<Props> = ({ selectFilter, setSelectFilter }) => {
+const FilterChipContainer: React.FC<Props> = ({ selectFilter, setSelectFilter, isSearchView = true }) => {
+  const { uiStore } = useNoteStore();
   const [filterChips, setFilterChips] = useState([]);
 
   const getLabel = () => {
@@ -65,6 +68,7 @@ const FilterChipContainer: React.FC<Props> = ({ selectFilter, setSelectFilter })
       },
     ];
     setFilterChips(chip);
+    if (!isSearchView) uiStore.setSelectFilter(selectFilter);
   };
 
   useEffect(() => {

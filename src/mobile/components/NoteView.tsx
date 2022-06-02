@@ -153,7 +153,7 @@ const NoteView: React.FC = () => {
               />
             </Suspense>
           ) : (
-            <FilterChipContainer selectFilter={selectFilter} setSelectFilter={setSelectFilter} />
+            <FilterChipContainer selectFilter={selectFilter} setSelectFilter={setSelectFilter} isSearchView={false} />
           )
         }
       </Observer>

@@ -30,30 +30,32 @@ const CategoriesList: React.FC = observer(() => {
 
   return (
     <CategoriesWrapper style={{ flexDirection: 'column' }}>
-      {Object.entries(tagStore.sortedTagList).map(([category, values]) => {
-        return (
-          <Mui.Accordion style={{ margin: 0, minHeight: 64 }} key={category}>
-            <Mui.AccordionSummary
-              expandIcon={<Icon.ArrowBottomLine />}
-              aria-controls="panel1a-content"
-              style={{ minHeight: 64 }}
-            >
-              <Mui.Typography>{categoryinfo[category]}</Mui.Typography>
-            </Mui.AccordionSummary>
-            {values
-              ? Object.entries(values)?.map(([tagKey, tagList]: [string, any]) => {
-                  return (
-                    <>
-                      <CategoryIndex key={tagKey}>{tagKey}</CategoryIndex>
-                      {/* {<Chips chipList={tag} />} */}
-                      <TagChipContainer tagList={tagList} handlePressTag={handlePressTag} />
-                    </>
-                  );
-                })
-              : ''}
-          </Mui.Accordion>
-        );
-      })}
+      <div style={{ overflowY: 'auto' }}>
+        {Object.entries(tagStore.sortedTagList).map(([category, values]) => {
+          return (
+            <Mui.Accordion style={{ margin: 0, minHeight: 64 }} key={category}>
+              <Mui.AccordionSummary
+                expandIcon={<Icon.ArrowBottomLine />}
+                aria-controls="panel1a-content"
+                style={{ minHeight: 64 }}
+              >
+                <Mui.Typography>{categoryinfo[category]}</Mui.Typography>
+              </Mui.AccordionSummary>
+              {values
+                ? Object.entries(values)?.map(([tagKey, tagList]: [string, any]) => {
+                    return (
+                      <>
+                        <CategoryIndex key={tagKey}>{tagKey}</CategoryIndex>
+                        {/* {<Chips chipList={tag} />} */}
+                        <TagChipContainer tagList={tagList} handlePressTag={handlePressTag} />
+                      </>
+                    );
+                  })
+                : ''}
+            </Mui.Accordion>
+          );
+        })}
+      </div>
     </CategoriesWrapper>
   );
 });

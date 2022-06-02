@@ -1,4 +1,4 @@
-import { styled } from '@wapl/ui';
+import { css, styled } from '@wapl/ui';
 
 export const RootWrapper = styled.div`
   display: flex;
@@ -10,7 +10,7 @@ export const RootWrapper = styled.div`
 export const ContentWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 56px);
   background: #fafafa;
   // padding: 56px 0;
 `;
@@ -18,15 +18,15 @@ export const ContentWrapper = styled.div`
 export const NoteViewBodyWrapper = styled.div`
   display: flex;
   width: auto;
-  height: 100%;
+  height: calc(100% - 56px);
   flex-direction: column;
-  padding: 0 16px;
 `;
 
 export const Scrollable = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  padding: 0 16px;
 `;
 
 export const NewChapterButtonWrapper = styled.div`
@@ -70,17 +70,17 @@ export const ModifiedInfo = styled.div`
   color: #8a8a8a;
 `;
 
-export const EditorTagListWrapper = styled.div`
+export const EditorTagListWrapper = styled.div<{ isReadMode: boolean }>`
   display: flex;
   flex-shrink: 0;
   width: 100%;
-  height: ${56 + 1}px;
-  left: 0;
-  bottom: 0;
+  height: ${56}px;
   padding: 14px 0 14px 16px;
   align-items: center;
   border-top: 1px solid #eee;
-  background: #fff;
+  position: fixed;
+  bottom: ${({ isReadMode }) => (isReadMode ? '0px' : '37px')};
+  width: 100%;
 `;
 
 export const TagEditViewBody = styled.div`
@@ -205,7 +205,7 @@ export const PageRestoreViewButtonsWrapper = styled.div`
 `;
 
 export const FilterChipWrapper = styled.div`
-  margin: 16px 0px;
+  margin: 16px;
 `;
 
 export const SearchResultWrapper = styled.div`
@@ -328,4 +328,45 @@ export const DialogInput = styled.input`
   border: 1px solid #222;
   border-radius: 8px;
   padding: 0 12px;
+`;
+
+export const EditorWrapper = styled.div<{ isReadMode: boolean }>`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: ${({ isReadMode }) => (isReadMode ? '100%' : 'calc(100% - 15px)')};
+  margin-top: 15px;
+  ${({ isReadMode }) =>
+    isReadMode &&
+    css`
+      .tox-editor-header {
+        display: none;
+      }
+      .tox .tox-edit-area__iframe {
+        height: calc(100% - 54px) !important;
+      }
+    `};
+  ${({ isReadMode }) =>
+    !isReadMode &&
+    css`
+      .tox-editor-header {
+        display: block;
+      }
+      .tox .tox-edit-area__iframe {
+        height: calc(100% - 54px) !important;
+      }
+    `};
+}
+`;
+
+export const ModifiedInfoWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  align-items: center;
+  padding: 8px 16px 32px 16px;
+`;
+
+export const TitleWrapper = styled(ModifiedInfoWrapper)`
+  padding: 0 16px;
 `;

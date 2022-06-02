@@ -7,18 +7,19 @@ import { TagModel } from '@wapl/note-core';
 
 type Props = {
   data: Array<TagModel>;
+  isReadMode: boolean;
 };
 
-const EditorTagList: React.FC<Props> = observer(({ data }) => {
+const EditorTagList: React.FC<Props> = observer(({ data, isReadMode }) => {
   const [isTagEditViewOpen, setIsTagEditViewOpen] = useState(false);
   const [tagList, setTagList] = useState(data);
 
   return (
-    <EditorTagListWrapper>
+    <EditorTagListWrapper isReadMode={isReadMode}>
       <Mui.IconButton style={{ padding: 0, marginRight: '12px' }} onClick={() => setIsTagEditViewOpen(true)}>
         <Icon.TagLine width={20} height={20} />
       </Mui.IconButton>
-      <TagListWrapper style={{ flexWrap: 'nowrap', whiteSpace: 'nowrap', overflowX: 'scroll', paddingRight: '6px' }}>
+      <TagListWrapper style={{ flexWrap: 'nowrap', whiteSpace: 'nowrap', overflowX: 'auto', paddingRight: '6px' }}>
         {tagList?.map(tag => (
           <TagChip key={tag.id}>
             <TagText>{tag.name}</TagText>

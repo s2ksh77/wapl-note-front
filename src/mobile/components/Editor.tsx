@@ -1,5 +1,6 @@
 import { Editor as TinyMceEditor } from '@tinymce/tinymce-react';
 import { useNoteStore } from '@wapl/note-core';
+import { useLayoutEffect } from 'react';
 import { waplIcons } from '../assets/icons';
 
 const Editor = () => {
@@ -8,20 +9,32 @@ const Editor = () => {
   const handleEditorChange = editorContent => {
     pageStore.pageInfo.content = editorContent;
   };
+
+  useLayoutEffect(() => {
+    if (!pageStore.pageInfo.editingUserId) {
+      setTimeout(() => {
+        editorStore.tinymce?.mode?.set('readonly');
+      }, 100);
+    } else {
+      setTimeout(() => {
+        editorStore.tinymce?.mode?.set('design');
+      }, 100);
+    }
+  }, [pageStore.pageInfo.editingUserId]);
+
   return (
     <TinyMceEditor
       apiKey="90655irb9nds5o8ycj2bpivk0v2y34e2oa6qta82nclxrnx3"
       initialValue={pageStore.pageInfo.content}
       init={{
         ...{
-          height: 'calc(100% - 163px)',
+          height: '100%',
           mobile: {
             plugins: 'table codesample insertdatetime hr link',
-            toolbar: 'undo redo blank blank blank extra image attach font align-group link',
+            toolbar: 'undo redo blank blank extra image attach font align-group link',
             toolbar_location: 'bottom',
             toolbar_mode: 'floating',
             toolbar_sticky: true,
-            toolbar_sticky_offset: 56,
             statusbar: false,
             menubar: false,
           },

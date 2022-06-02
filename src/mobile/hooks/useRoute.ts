@@ -78,7 +78,11 @@ const useRoute = () => {
     navigate(-1);
   }, [navigate]);
 
-  return { goBack, routeTo };
+  return {
+    goBack,
+    routeTo,
+    isContent: pathname.includes(PANEL_PAGE),
+  };
 };
 
 export default useRoute;

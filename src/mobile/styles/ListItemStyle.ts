@@ -7,7 +7,7 @@ export const PageListWrapper = styled.div<{ isList: boolean }>`
   height: fit-content;
   border-radius: 10px;
   border: ${({ isList }) => (isList ? '1px solid #ebebeb' : '0')};
-  margin: 16px;
+  margin: 16px 0;
   padding: 0 10px;
   background: #fff;
   flex: 1 auto;
@@ -94,6 +94,7 @@ export const NoteViewMenuListItemWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   height: 48px;
+  flex-shrink: 0;
 `;
 
 export const NoteViewMenuListTitle = styled.div`
@@ -102,7 +103,7 @@ export const NoteViewMenuListTitle = styled.div`
 `;
 
 export const NoteViewSelectboxWrapper = styled.div`
-  margin-right: 12.83px;
+  margin-right: 8px;
 `;
 
 export const NoteViewMenuListWrapper = styled.div`

@@ -164,7 +164,7 @@ export const PageMoveViewButtonsWrapper = styled.div`
   width: auto;
   height: 48px;
   justify-content: space-between;
-  margin: 0px 16px 16px 16px;
+  margin: 8px 16px 16px;
 `;
 
 export const ShareToTalkViewBody = styled.div`

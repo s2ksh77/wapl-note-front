@@ -6,6 +6,7 @@ import EmptyChapterView from '@mcomponents/EmptyChapterView';
 import BottomDrawer, { IDrawerItem } from '@mcomponents/BottomDrawer';
 import DeleteDialog from '@mcomponents/dialog/ConfirmDialog';
 import InputDialog from '@mcomponents/dialog/InputDialog';
+import PageMoveView from '@mcomponents/PageMoveView';
 import { ContentWrapper, Scrollable, NewChapterButtonWrapper as NewPageButtonWrapper } from '@mstyles/ContentStyle';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@wapl/ui';
@@ -43,6 +44,7 @@ const ChapterView: React.FC = observer(() => {
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isPageMoveViewOpen, setIsPageMoveViewOpen] = useState(false);
 
   const shareItems: IDrawerItem[] = [
     {
@@ -102,7 +104,10 @@ const ChapterView: React.FC = observer(() => {
     {
       action: 'move',
       text: '페이지 이동',
-      onClick: () => console.log('페이지 이동'),
+      onClick: () => {
+        setIsPageMoveViewOpen(true);
+        setIsMoreDrawerOpen(false);
+      },
     },
     { action: 'select', text: '전체 선택', onClick: handleSelectAllPress },
   ];
@@ -298,6 +303,13 @@ const ChapterView: React.FC = observer(() => {
                 onClick: () => setIsDeleteDialogOpen(false),
               },
             ]}
+          />
+          <PageMoveView
+            open={isPageMoveViewOpen}
+            chapterId={chapterStore.currentId}
+            pageList={getSelectedItems()}
+            onClose={() => setIsPageMoveViewOpen(false)}
+            onSuccess={handleCloseButtonPress}
           />
         </>
       )}

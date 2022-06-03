@@ -66,7 +66,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   width: inherit;
-  margin: 8px 0px;
+  margin: 8px 16px;
   overflow: visible;
 `;
 

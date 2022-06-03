@@ -11,7 +11,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@wapl/ui';
 import { useNoteStore, ChapterModel, PageModel } from '@wapl/note-core';
 import useMultiSelect from '../hooks/useMultiSelect';
-import { TLocation } from './NoteAppBar';
+import { TLocation } from '../@types/common';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '../constant/routes';
 import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 
@@ -263,11 +263,13 @@ const ChapterView: React.FC = observer(() => {
             value={chapterName}
             buttons={[
               {
+                id: 'cancel',
                 variant: 'dismiss',
                 text: '취소',
                 onClick: () => setIsRenameDialogOpen(false),
               },
               {
+                id: 'confirm',
                 variant: 'confirm',
                 text: '변경',
                 onClick: async name => {

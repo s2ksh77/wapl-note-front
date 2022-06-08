@@ -1,6 +1,7 @@
 import { Editor as TinyMceEditor } from '@tinymce/tinymce-react';
 import { useNoteStore } from '@wapl/note-core';
 import { useLayoutEffect } from 'react';
+import { editorContentCSS } from '@mstyles/EditorStyle';
 import { waplIcons } from '../assets/icons';
 
 const Editor = () => {
@@ -26,6 +27,9 @@ const Editor = () => {
     <TinyMceEditor
       apiKey="90655irb9nds5o8ycj2bpivk0v2y34e2oa6qta82nclxrnx3"
       initialValue={pageStore.pageInfo.content}
+      onInit={() => {
+        editorStore.setMarker(editorStore.tinymce?.getBody());
+      }}
       init={{
         ...{
           height: '100%',
@@ -38,15 +42,7 @@ const Editor = () => {
             statusbar: false,
             menubar: false,
           },
-          content_style: `
-                body {
-                  margin: 0 16px 0 16px;
-                  font-size: 14px;
-                  font-weight: 400;
-                  color: #222;
-                }
-                p { margin: 0; }
-              `,
+          content_style: editorContentCSS,
         },
         setup(editor) {
           editorStore.setEditor(editor);

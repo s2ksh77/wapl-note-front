@@ -6,3 +6,8 @@ export const NoteViewHeaderWrapper = styled.div`
   height: 56px;
   align-items: center;
 `;
+
+export const SearchFieldWrapper = styled.div`
+  display: flex;
+  width: 100%;
+`;

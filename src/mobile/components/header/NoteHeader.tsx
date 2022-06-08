@@ -1,10 +1,12 @@
+/* eslint-disable no-nested-ternary */
 import { observer } from 'mobx-react-lite';
 import { Icon, AppBar, AppBarButton, AppBarBackButton, AppBarCloseButton } from '@wapl/ui';
 import { useNoteStore } from '@wapl/note-core';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import InPageSearchBar from './InPageSearchBar';
 import useSearch from '@/mobile/hooks/useSearch';
-import { ROUTES, SEARCH_DETAIL } from '@/mobile/constant/routes';
+import { ROUTES, SEARCH_DETAIL, PAGE_DETAIL } from '@/mobile/constant/routes';
 
 export type TLocation = {
   pathname: string;
@@ -56,6 +58,10 @@ const NoteHeader = observer(() => {
     });
   };
 
+  const isSearchInPage = () => {
+    return pathname.includes(PAGE_DETAIL) && !pathname.includes(SEARCH_DETAIL);
+  };
+
   const handleSearchVisible = () => {
     uiStore.toggleSearchBar();
     if (pathname.includes(SEARCH_DETAIL)) handelSearchCancel();
@@ -70,6 +76,8 @@ const NoteHeader = observer(() => {
       leftSide={<Buttons buttons={uiStore.headerInfo.leftSide || []} />}
       rightSide={<Buttons buttons={uiStore.headerInfo.rightSide || []} />}
     />
+  ) : isSearchInPage() ? (
+    <InPageSearchBar handleSearchVisible={handleSearchVisible} />
   ) : (
     <SearchBar
       value={getValue}

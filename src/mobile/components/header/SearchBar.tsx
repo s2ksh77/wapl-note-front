@@ -1,5 +1,6 @@
 import React from 'react';
-import { SearchField, styled } from '@wapl/ui';
+import { SearchField } from '@wapl/ui';
+import { SearchFieldWrapper } from '@mstyles/HeaderStyle';
 
 interface Props {
   value: string;
@@ -25,8 +26,3 @@ const SearchBar: React.FC<Props> = ({ value, onChange, onCancel, onEnter }) => {
 };
 
 export default React.memo(SearchBar);
-
-const SearchFieldWrapper = styled.div`
-  display: flex;
-  width: 100%;
-`;

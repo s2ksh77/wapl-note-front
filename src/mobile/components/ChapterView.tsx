@@ -233,6 +233,7 @@ const ChapterView: React.FC = observer(() => {
         <Scrollable>
           <PageList
             pageList={pageList}
+            setPageList={setPageList}
             isSelected={isSelected}
             toggleSelected={toggleSelected}
             isRecycleBin={isRecycleBin}

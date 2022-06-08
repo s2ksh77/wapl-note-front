@@ -1,11 +1,12 @@
 import { useNoteStore } from '@wapl/note-core';
-import { Icon, Checkbox, styled, Chip } from '@wapl/ui';
+import { Icon, Checkbox, styled, Chip, Mui } from '@wapl/ui';
 import {
   PageItemWrapper,
   PageItemHeaderWrapper,
   PageTitle,
   PageItemBodyWrapper,
   PageContent,
+  PageBookmarkWrapper,
 } from '@mstyles/ListItemStyle';
 
 interface IPage {
@@ -28,10 +29,11 @@ type Props = {
   page: IPage;
   isSelected: (value: string) => boolean;
   handleItemPress: (id: string) => () => void;
+  handleBookmarkPress: (id: string, favorite: boolean) => void;
   tagList?: Array<ITag>;
 };
 
-const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, tagList }) => {
+const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, handleBookmarkPress, tagList }) => {
   const { pageStore } = useNoteStore();
 
   return (
@@ -43,7 +45,14 @@ const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, tagList 
           <Icon.PageFill width={20} height={20} color="#fcbb00" />
         )}
         <PageTitle>{page.name}</PageTitle>
-        <Icon.BookmarkFill width={18} height={18} color={page.favorite ? '#FCBB00' : '#ccc'} />
+        <PageBookmarkWrapper
+          onClick={e => {
+            e.stopPropagation();
+            handleBookmarkPress(page.id, page.favorite);
+          }}
+        >
+          <Icon.BookmarkFill width={18} height={18} color={page.favorite ? '#FCBB00' : '#ccc'} />
+        </PageBookmarkWrapper>
       </PageItemHeaderWrapper>
       <PageItemBodyWrapper>
         <PageContent>{page.textContent}</PageContent>

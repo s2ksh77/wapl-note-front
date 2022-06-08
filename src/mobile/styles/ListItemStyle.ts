@@ -66,6 +66,10 @@ export const PageItemDivider = styled.span`
   }
 `;
 
+export const PageBookmarkWrapper = styled.div`
+  cursor: pointer;
+`;
+
 export const NoteViewChapterListWrapper = styled.div<{
   showDivider: boolean;
 }>`

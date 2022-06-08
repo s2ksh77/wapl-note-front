@@ -11,7 +11,6 @@ import {
   ModifiedInfo as ModifiedUser,
 } from '@mstyles/ContentStyle';
 import { PageItemDivider as PageViewDivider } from '@mstyles/ListItemStyle';
-import NoteAppBar, { TLocation } from '@mcomponents/NoteAppBar';
 import EditorTagList from '@mcomponents/EditorTagList';
 import BottomDrawer from '@mcomponents/BottomDrawer';
 import RenameDialog from '@mcomponents/dialog/InputDialog';
@@ -19,6 +18,7 @@ import { useLocation } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
 import { useNoteStore, PageModel, TagModel } from '@wapl/note-core';
 import { TagDTO } from '@wapl/note-core/dist/dts/models/dto/TagDTO';
+import { TLocation } from '../@types/common';
 
 const editingIcon = require('../assets/wapl-editing.gif');
 

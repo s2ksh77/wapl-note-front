@@ -22,3 +22,20 @@ export enum ChapterType {
   SharedPage = 'SHARED_PAGE',
   RecycleBin = 'RECYCLE_BIN',
 }
+
+export type TLocation = {
+  pathname: string;
+  state?: {
+    panel?: string;
+    id?: string;
+    isNewPage?: boolean;
+    isRecycleBin?: boolean;
+    searchKey?: string;
+    searchResult?: {
+      chapterList?: [];
+      pageList?: [];
+      tagList?: [];
+    };
+    tagId?: string;
+  };
+};

@@ -4,10 +4,9 @@ import { useNoteStore } from '@wapl/note-core';
 import { Icon } from '@wapl/ui';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { MenuType } from '../@types/common';
+import { MenuType, TLocation } from '../@types/common';
 import ChapterList from './ChapterList';
 import FilterChipContainer from './FilterChipContainer';
-import { TLocation } from './NoteAppBar';
 import PageList from './PageList';
 import RoomList from './RoomList';
 

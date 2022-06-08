@@ -2,7 +2,7 @@ import { styled } from '@wapl/ui';
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { CHAPTER_DETAIL, MY_NOTE } from '../constant/routes';
-import { TLocation } from './NoteAppBar';
+import { TLocation } from '../@types/common';
 
 const LoadingSpinner: React.FC = () => {
   const { navTab } = useParams();
@@ -23,13 +23,22 @@ const LoadingSpinner: React.FC = () => {
 
   const Loader: React.FC<{ size?: number; type?: string }> = React.memo(({ size = 5, type }) => {
     const arr = new Array(size).fill(null);
-    return <>{arr.map(ar => loaderComponent(type))}</>;
+    return <>{arr.map(ar => loaderComponent(type, randomKey()))}</>;
   });
 
-  const loaderComponent = type => {
+  const randomKey = () => {
+    let result = '';
+    const text = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < 5; i += 1) result += text.charAt(Math.floor(Math.random() * text.length));
+
+    return result;
+  };
+
+  const loaderComponent = (type, key) => {
     if (type === 'chapter') {
       return (
-        <Wrapper>
+        <Wrapper key={key}>
           <CircleWrapper>
             <Circle />
           </CircleWrapper>
@@ -41,7 +50,7 @@ const LoadingSpinner: React.FC = () => {
       );
     }
     return (
-      <PageWrapper>
+      <PageWrapper key={key}>
         <PageCircleWrapper>
           <Circle />
         </PageCircleWrapper>

@@ -38,7 +38,7 @@ const InputDialog: React.FC<Props> = ({ open, title, value, placeholder, buttons
       </DialogWrapper>
       <DialogButtonWrapper>
         {buttons.map(button => (
-          <DialogButton variant={button.variant} onClick={() => button.onClick(inputValue)}>
+          <DialogButton key={button.text} variant={button.variant} onClick={() => button.onClick(inputValue)}>
             {button.text}
           </DialogButton>
         ))}

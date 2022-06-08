@@ -22,7 +22,7 @@ const ConfirmDialog: React.FC<Props> = ({ open, title, content, buttons }) => {
       </DialogWrapper>
       <DialogButtonWrapper>
         {buttons.map(button => (
-          <DialogButton variant={button.variant} onClick={button.onClick}>
+          <DialogButton key={button.text} variant={button.variant} onClick={button.onClick}>
             {button.text}
           </DialogButton>
         ))}

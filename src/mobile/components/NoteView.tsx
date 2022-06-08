@@ -126,13 +126,11 @@ const NoteView: React.FC = () => {
                   placeholder="새 챕터"
                   buttons={[
                     {
-                      id: 'cancel',
                       variant: 'dismiss',
                       text: '취소',
                       onClick: () => setIsNewChapterDialogOpen(false),
                     },
                     {
-                      id: 'confirm',
                       variant: 'confirm',
                       text: '생성',
                       onClick: (name: string) => handleChapterCreate(name),

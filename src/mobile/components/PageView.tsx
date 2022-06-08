@@ -193,13 +193,11 @@ const PageView: React.FC = observer(() => {
         value={pageStore.pageInfo.name}
         buttons={[
           {
-            id: 'cancel',
             variant: 'dismiss',
             text: '취소',
             onClick: () => setIsRenameDialogOpen(false),
           },
           {
-            id: 'confirm',
             variant: 'confirm',
             text: '변경',
             onClick: async name => {

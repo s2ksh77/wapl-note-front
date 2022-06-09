@@ -143,8 +143,16 @@ const PageView: React.FC = observer(() => {
     pageStore.pageInfo.editingUserId = editingUserId;
   };
 
+  const getTitleFromContent = () => {
+    const content = editorStore.tinymce?.getBody().children;
+    if (!content) return '(제목 없음)';
+    const targetNode = [...content].find(node => !!node.textContent);
+    return targetNode?.textContent ?? '(제목 없음)';
+  };
+
   const handleSave = () => {
     if (pageStore.pageInfo.editingUserId !== tempUserId) return;
+    if (!pageStore.pageInfo.name) pageStore.pageInfo.name = getTitleFromContent();
     pageStore.savePage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo, isNewPage);
   };
 

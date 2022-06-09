@@ -1,5 +1,5 @@
-import { useNoteStore } from '@wapl/note-core';
-import { Icon, Checkbox, styled, Chip, Mui } from '@wapl/ui';
+import { useNoteStore, PageModel } from '@wapl/note-core';
+import { Icon, Checkbox, styled, Chip } from '@wapl/ui';
 import {
   PageItemWrapper,
   PageItemHeaderWrapper,
@@ -9,24 +9,13 @@ import {
   PageBookmarkWrapper,
 } from '@mstyles/ListItemStyle';
 
-interface IPage {
-  id: string;
-  name: string;
-  noteContet?: string;
-  textContent?: string;
-  chapterId?: string;
-  favorite?: boolean;
-  read?: boolean;
-  updatedUserId?: string;
-}
-
 interface ITag {
   id: string;
   name: string;
 }
 
 type Props = {
-  page: IPage;
+  page: Partial<PageModel>;
   isSelected: (value: string) => boolean;
   handleItemPress: (id: string) => () => void;
   handleBookmarkPress: (id: string, favorite: boolean) => void;
@@ -55,7 +44,12 @@ const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, handleBo
         </PageBookmarkWrapper>
       </PageItemHeaderWrapper>
       <PageItemBodyWrapper>
-        <PageContent>{page.textContent}</PageContent>
+        <PageContent>
+          {page.content
+            ?.replace(/[<][^>]*[>]|&nbsp;|&zwj;/gi, '')
+            .replace(/&lt;/gi, '<')
+            .replace(/&gt;/gi, '>')}
+        </PageContent>
       </PageItemBodyWrapper>
       {tagList?.map((tag: any) => {
         return <SChip {...tag} label={tag?.name} type="filter" />;

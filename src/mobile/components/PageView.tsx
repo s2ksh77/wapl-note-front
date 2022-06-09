@@ -32,7 +32,7 @@ const PageView: React.FC = observer(() => {
   const id = state?.id;
   const isNewPage = state?.isNewPage;
   const isRecycleBin = state?.isRecycleBin;
-  const { pageStore, tagStore, uiStore } = useNoteStore();
+  const { pageStore, tagStore, editorStore, uiStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -122,10 +122,6 @@ const PageView: React.FC = observer(() => {
     }
   }, [isNewPage]);
 
-  const savePage = () => {
-    pageStore.savePage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo, isNewPage);
-  };
-
   const handleBookmarkPress = async () => {
     try {
       const { id, favorite } = pageStore.pageInfo;
@@ -147,6 +143,11 @@ const PageView: React.FC = observer(() => {
     pageStore.pageInfo.editingUserId = editingUserId;
   };
 
+  const handleSave = () => {
+    if (pageStore.pageInfo.editingUserId !== tempUserId) return;
+    pageStore.savePage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo, isNewPage);
+  };
+
   useLayoutEffect(() => {
     uiStore.setHeaderInfo({
       leftSide: [{ action: 'back' }],
@@ -156,12 +157,14 @@ const PageView: React.FC = observer(() => {
           onClick: () => {
             uiStore.toggleSearchBar();
             // 임시. 화면을 벗어나는 동작을 감지해서 저장하도록 수정 필요
-            savePage();
+            handleSave();
           },
         },
         { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
       ],
     });
+
+    return () => handleSave();
   }, []);
 
   return (

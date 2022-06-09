@@ -24,6 +24,7 @@ const editingIcon = require('../assets/wapl-editing.gif');
 
 const PageView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
+  const tempUserId = 'caf1a998-c39e-49d4-81c7-719f6cc624d9';
   // const {
   //   state: { id, isNewPage, isRecycleBin },
   // } = useLocation() as TLocation;
@@ -136,6 +137,16 @@ const PageView: React.FC = observer(() => {
     }
   };
 
+  const handleTitleChange = e => {
+    pageStore.pageInfo.name = e.target.value;
+  };
+
+  const handleTitlePress = async () => {
+    if (pageStore.pageInfo.editingUserId) return;
+    const { editingUserId } = await pageStore.editPage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo);
+    pageStore.pageInfo.editingUserId = editingUserId;
+  };
+
   useLayoutEffect(() => {
     uiStore.setHeaderInfo({
       leftSide: [{ action: 'back' }],
@@ -167,7 +178,14 @@ const PageView: React.FC = observer(() => {
           <Mui.IconButton style={{ padding: 0 }} onClick={handleBookmarkPress}>
             <Icon.BookmarkFill width={24} height={24} color={pageStore.pageInfo.favorite ? '#FCBB00' : '#ccc'} />
           </Mui.IconButton>
-          <PageTitleInput value={pageStore.pageInfo.name} onChange={() => console.log('onChange')} />
+          <PageTitleInput
+            placeholder="(제목 없음)"
+            value={pageStore.pageInfo.name ?? ''}
+            maxLength={200}
+            onChange={handleTitleChange}
+            onClick={handleTitlePress}
+            readOnly={pageStore.pageInfo.editingUserId !== tempUserId}
+          />
         </TitleWrapper>
         <PageViewDivider style={{ margin: '12px 0 0 0' }} />
         <ModifiedInfoWrapper>

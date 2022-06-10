@@ -16,7 +16,7 @@ interface ITag {
 
 type Props = {
   pageList: Array<Partial<PageModel>>;
-  setPageList?: React.Dispatch<SetStateAction<Array<IPage>>>;
+  setPageList?: React.Dispatch<SetStateAction<Array<Partial<PageModel>>>>;
   isSelected?: (value: string) => boolean;
   toggleSelected?: (value: string) => void;
   isRecycleBin?: boolean;

@@ -6,13 +6,13 @@ import { waplIcons } from '../assets/icons';
 
 const Editor = observer(() => {
   const { pageStore, editorStore } = useNoteStore();
+  const tempUserId = 'caf1a998-c39e-49d4-81c7-719f6cc624d9';
 
   const handleEditorChange = editorContent => {
     pageStore.pageInfo.content = editorContent;
   };
 
   const handleEditorFocus = async () => {
-    if (pageStore.pageInfo.editingUserId) return;
     const { editingUserId } = await pageStore.editPage(
       '79b3f1b3-85dc-4965-a8a2-0c4c56244b82',
       pageStore.pageInfo.chapterId,
@@ -78,6 +78,14 @@ const Editor = observer(() => {
             onAction() {
               console.log('do nothing');
             },
+          });
+          editor.on('touchend', e => {
+            if (!pageStore.pageInfo.editingUserId || pageStore.pageInfo.editingUserId === tempUserId) return;
+            e.preventDefault(); // Remove caret
+          });
+          editor.on('focus', e => {
+            if (!pageStore.pageInfo.editingUserId) return;
+            e.stopImmediatePropagation();
           });
         },
       }}

@@ -184,7 +184,7 @@ const PageView: React.FC = observer(() => {
           },
         }}
       />
-      <EditorWrapper isReadMode={!pageStore.pageInfo.editingUserId}>
+      <EditorWrapper isReadMode={pageStore.pageInfo.editingUserId !== tempUserId}>
         <TitleWrapper>
           <Mui.IconButton style={{ padding: 0 }} onClick={handleBookmarkPress}>
             <Icon.BookmarkFill width={24} height={24} color={pageStore.pageInfo.favorite ? '#FCBB00' : '#ccc'} />
@@ -209,7 +209,7 @@ const PageView: React.FC = observer(() => {
         </ModifiedInfoWrapper>
         <Editor />
       </EditorWrapper>
-      <EditorTagList data={tagStore.pageTagList} isReadMode={!pageStore.pageInfo.editingUserId} />
+      <EditorTagList data={tagStore.pageTagList} isReadMode={pageStore.pageInfo.editingUserId !== tempUserId} />
       <BottomDrawer
         title="더보기"
         items={isRecycleBin ? moreItemsInRecycleBin : moreItems}

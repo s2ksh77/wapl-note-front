@@ -24,6 +24,7 @@ const editingIcon = require('../assets/wapl-editing.gif');
 
 const PageView: React.FC = observer(() => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
+  const tempUserId = 'caf1a998-c39e-49d4-81c7-719f6cc624d9';
   // const {
   //   state: { id, isNewPage, isRecycleBin },
   // } = useLocation() as TLocation;
@@ -31,7 +32,7 @@ const PageView: React.FC = observer(() => {
   const id = state?.id;
   const isNewPage = state?.isNewPage;
   const isRecycleBin = state?.isRecycleBin;
-  const { pageStore, tagStore, uiStore } = useNoteStore();
+  const { pageStore, tagStore, editorStore, uiStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -121,10 +122,6 @@ const PageView: React.FC = observer(() => {
     }
   }, [isNewPage]);
 
-  const savePage = () => {
-    pageStore.savePage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo, isNewPage);
-  };
-
   const handleBookmarkPress = async () => {
     try {
       const { id, favorite } = pageStore.pageInfo;
@@ -136,6 +133,29 @@ const PageView: React.FC = observer(() => {
     }
   };
 
+  const handleTitleChange = e => {
+    pageStore.pageInfo.name = e.target.value;
+  };
+
+  const handleTitlePress = async () => {
+    if (pageStore.pageInfo.editingUserId) return;
+    const { editingUserId } = await pageStore.editPage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo);
+    pageStore.pageInfo.editingUserId = editingUserId;
+  };
+
+  const getTitleFromContent = () => {
+    const content = editorStore.tinymce?.getBody().children;
+    if (!content) return '(제목 없음)';
+    const targetNode = [...content].find(node => !!node.textContent);
+    return targetNode?.textContent ?? '(제목 없음)';
+  };
+
+  const handleSave = () => {
+    if (pageStore.pageInfo.editingUserId !== tempUserId) return;
+    if (!pageStore.pageInfo.name) pageStore.pageInfo.name = getTitleFromContent();
+    pageStore.savePage(tempChannelId, pageStore.pageInfo.chapterId, pageStore.pageInfo, isNewPage);
+  };
+
   useLayoutEffect(() => {
     uiStore.setHeaderInfo({
       leftSide: [{ action: 'back' }],
@@ -145,12 +165,14 @@ const PageView: React.FC = observer(() => {
           onClick: () => {
             uiStore.toggleSearchBar();
             // 임시. 화면을 벗어나는 동작을 감지해서 저장하도록 수정 필요
-            savePage();
+            handleSave();
           },
         },
         { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
       ],
     });
+
+    return () => handleSave();
   }, []);
 
   return (
@@ -162,12 +184,19 @@ const PageView: React.FC = observer(() => {
           },
         }}
       />
-      <EditorWrapper isReadMode={!pageStore.pageInfo.editingUserId}>
+      <EditorWrapper isReadMode={pageStore.pageInfo.editingUserId !== tempUserId}>
         <TitleWrapper>
           <Mui.IconButton style={{ padding: 0 }} onClick={handleBookmarkPress}>
             <Icon.BookmarkFill width={24} height={24} color={pageStore.pageInfo.favorite ? '#FCBB00' : '#ccc'} />
           </Mui.IconButton>
-          <PageTitleInput value={pageStore.pageInfo.name} onChange={() => console.log('onChange')} />
+          <PageTitleInput
+            placeholder="(제목 없음)"
+            value={pageStore.pageInfo.name ?? ''}
+            maxLength={200}
+            onChange={handleTitleChange}
+            onClick={handleTitlePress}
+            readOnly={pageStore.pageInfo.editingUserId !== tempUserId}
+          />
         </TitleWrapper>
         <PageViewDivider style={{ margin: '12px 0 0 0' }} />
         <ModifiedInfoWrapper>
@@ -180,7 +209,7 @@ const PageView: React.FC = observer(() => {
         </ModifiedInfoWrapper>
         <Editor />
       </EditorWrapper>
-      <EditorTagList data={tagStore.pageTagList} isReadMode={!pageStore.pageInfo.editingUserId} />
+      <EditorTagList data={tagStore.pageTagList} isReadMode={pageStore.pageInfo.editingUserId !== tempUserId} />
       <BottomDrawer
         title="더보기"
         items={isRecycleBin ? moreItemsInRecycleBin : moreItems}

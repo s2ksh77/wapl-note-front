@@ -1,32 +1,30 @@
 import { Editor as TinyMceEditor } from '@tinymce/tinymce-react';
+import { observer } from 'mobx-react';
 import { useNoteStore } from '@wapl/note-core';
-import { useLayoutEffect } from 'react';
 import { editorContentCSS } from '@mstyles/EditorStyle';
 import { waplIcons } from '../assets/icons';
 
-const Editor = () => {
+const Editor = observer(() => {
   const { pageStore, editorStore } = useNoteStore();
+  const tempUserId = 'caf1a998-c39e-49d4-81c7-719f6cc624d9';
 
   const handleEditorChange = editorContent => {
     pageStore.pageInfo.content = editorContent;
   };
 
-  useLayoutEffect(() => {
-    if (!pageStore.pageInfo.editingUserId) {
-      setTimeout(() => {
-        editorStore.tinymce?.mode?.set('readonly');
-      }, 100);
-    } else {
-      setTimeout(() => {
-        editorStore.tinymce?.mode?.set('design');
-      }, 100);
-    }
-  }, [pageStore.pageInfo.editingUserId]);
+  const handleEditorFocus = async () => {
+    const { editingUserId } = await pageStore.editPage(
+      '79b3f1b3-85dc-4965-a8a2-0c4c56244b82',
+      pageStore.pageInfo.chapterId,
+      pageStore.pageInfo,
+    );
+    pageStore.pageInfo.editingUserId = editingUserId;
+  };
 
   return (
     <TinyMceEditor
       apiKey="90655irb9nds5o8ycj2bpivk0v2y34e2oa6qta82nclxrnx3"
-      initialValue={pageStore.pageInfo.content}
+      value={pageStore.pageInfo.content ?? '<p><br></p>'}
       onInit={() => {
         editorStore.setMarker(editorStore.tinymce?.getBody());
       }}
@@ -81,11 +79,20 @@ const Editor = () => {
               console.log('do nothing');
             },
           });
+          editor.on('touchend', e => {
+            if (!pageStore.pageInfo.editingUserId || pageStore.pageInfo.editingUserId === tempUserId) return;
+            e.preventDefault(); // Remove caret
+          });
+          editor.on('focus', e => {
+            if (!pageStore.pageInfo.editingUserId) return;
+            e.stopImmediatePropagation();
+          });
         },
       }}
       onEditorChange={handleEditorChange}
+      onFocus={handleEditorFocus}
     />
   );
-};
+});
 
 export default Editor;

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
 import React, { SetStateAction } from 'react';
-import { useNoteStore } from '@wapl/note-core';
+import { useNoteStore, PageModel } from '@wapl/note-core';
 import LongPressable from 'react-longpressable';
 import PageItem from '@mcomponents/PageItem';
 import { PageListWrapper, PageItemDivider } from '@mstyles/ListItemStyle';
@@ -13,21 +13,10 @@ interface ITag {
   id: string;
   name: string;
 }
-interface IPage {
-  id: string;
-  name: string;
-  content?: string;
-  textContent?: string;
-  chapterId?: string;
-  favorite?: boolean;
-  read?: boolean;
-  updatedUserId?: string;
-  tagList: Array<ITag>;
-}
 
 type Props = {
-  pageList: Array<IPage>;
-  setPageList?: React.Dispatch<SetStateAction<Array<IPage>>>;
+  pageList: Array<Partial<PageModel>>;
+  setPageList?: React.Dispatch<SetStateAction<Array<Partial<PageModel>>>>;
   isSelected?: (value: string) => boolean;
   toggleSelected?: (value: string) => void;
   isRecycleBin?: boolean;

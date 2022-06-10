@@ -125,7 +125,15 @@ const ChapterView: React.FC = observer(() => {
     deSelectAll();
   };
 
-  const handlePageCreate = () => {
+  const handlePageCreate = async () => {
+    await pageStore.createPage(
+      tempChannelId,
+      id,
+      new PageModel({
+        chapterId: id,
+        createdUserId: 'caf1a998-c39e-49d4-81c7-719f6cc624d9',
+      }),
+    );
     navigation(`/${pathname.split('/')[1]}${ROUTES.PAGE_DETAIL}`, {
       state: { panel: 'content', isNewPage: true },
     });

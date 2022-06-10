@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { observer } from 'mobx-react';
-import { useNoteStore } from '@wapl/note-core';
+import { useNoteStore, PageModel } from '@wapl/note-core';
 import LongPressable from 'react-longpressable';
 import ChapterItem from '@mcomponents/ChapterItem';
 import { NoteViewChapterListWrapper } from '@mstyles/ListItemStyle';
@@ -14,18 +14,7 @@ export interface IChapter {
   name: string;
   type: string;
   color: string;
-  children: Array<IPage>;
-}
-
-export interface IPage {
-  id: string;
-  name: string;
-  content?: string;
-  textContent?: string;
-  chapterId?: string;
-  favorite?: boolean;
-  read?: boolean;
-  updatedUserId?: string;
+  children: Array<Partial<PageModel>>;
 }
 
 type Props = {

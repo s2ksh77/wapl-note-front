@@ -13,6 +13,7 @@ import {
 import { PageItemDivider as PageViewDivider } from '@mstyles/ListItemStyle';
 import EditorTagList from '@mcomponents/EditorTagList';
 import BottomDrawer from '@mcomponents/BottomDrawer';
+
 import RenameDialog from '@mcomponents/dialog/InputDialog';
 import { useLocation } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
@@ -35,6 +36,7 @@ const PageView: React.FC = observer(() => {
   const { pageStore, tagStore, editorStore, uiStore } = useNoteStore();
   const { goBack } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
+  const [isUploadImageOpen, setUploadImageDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [newPage, setNewPage] = useState(false);
 
@@ -73,6 +75,25 @@ const PageView: React.FC = observer(() => {
         } catch (error) {
           console.log('throwPage Error', error);
         }
+      },
+    },
+  ];
+
+  const uploadItems = [
+    {
+      action: 'drive',
+      text: '드라이브',
+      onClick: () => {
+        setUploadImageDrawerOpen(false);
+        console.log('드라이브 첨부');
+      },
+    },
+    {
+      action: 'device',
+      text: '내 기기',
+      onClick: () => {
+        setUploadImageDrawerOpen(false);
+        console.log('내 기기 첨부');
       },
     },
   ];
@@ -127,7 +148,7 @@ const PageView: React.FC = observer(() => {
       const { id, favorite } = pageStore.pageInfo;
       if (favorite) await pageStore.unbookmarkPage(id);
       else await pageStore.bookmarkPage(id);
-      fetchPageInfoList();
+      pageStore.pageInfo.favorite = !favorite;
     } catch (error) {
       console.log('bookmarkPage error', error);
     }
@@ -207,7 +228,7 @@ const PageView: React.FC = observer(() => {
             <ModifiedUser>{pageStore.pageInfo.updatedUserId}</ModifiedUser>
           )}
         </ModifiedInfoWrapper>
-        <Editor />
+        <Editor setUploadDrawer={setUploadImageDrawerOpen} />
       </EditorWrapper>
       <EditorTagList data={tagStore.pageTagList} isReadMode={pageStore.pageInfo.editingUserId !== tempUserId} />
       <BottomDrawer
@@ -215,6 +236,13 @@ const PageView: React.FC = observer(() => {
         items={isRecycleBin ? moreItemsInRecycleBin : moreItems}
         open={isMoreDrawerOpen}
         onClose={() => setIsMoreDrawerOpen(false)}
+      />
+      <BottomDrawer
+        title="파일 첨부"
+        items={uploadItems}
+        open={isUploadImageOpen}
+        onClose={() => setUploadImageDrawerOpen(false)}
+        layout="grid"
       />
       <RenameDialog
         open={isRenameDialogOpen}

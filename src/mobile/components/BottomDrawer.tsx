@@ -48,6 +48,10 @@ const BottomDrawer: React.FC<Props> = ({ title, items, subItems, open, onClose, 
         return <Icon.MoveFolderLine width={size} height={size} />;
       case 'select':
         return <Icon.SelectLine width={size} height={size} />;
+      case 'drive':
+        return <Icon.DriveLine width={size} height={size} />;
+      case 'device':
+        return <Icon.DeviceLine width={size} height={size} />;
       default:
         return null;
     }

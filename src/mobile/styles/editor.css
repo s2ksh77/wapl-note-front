@@ -1,0 +1,21 @@
+/**
+    기존처럼 globalStyle로 에디터 css 관리하던 부분 우선 css load해서 적용하도록
+*/
+
+.tox-tbtn--select[aria-label="Blocks"] .tox-tbtn__select-label{
+    width: 2.3rem !important;
+}
+.tox-tbtn--select[aria-label="Fonts"] .tox-tbtn__select-label{
+    width: 4rem !important;
+}
+.tox-tbtn--select[aria-label="Font sizes"] .tox-tbtn__select-label{
+    width: 2.1rem !important;
+}
+
+.tox-toolbar--scrolling::-webkit-scrollbar {
+    display: none !important;
+}
+
+.tox-tbtn__select-chevron {
+    display: none !important;
+}

@@ -1,10 +1,16 @@
+import { SetStateAction } from 'react';
 import { Editor as TinyMceEditor } from '@tinymce/tinymce-react';
 import { observer } from 'mobx-react';
 import { useNoteStore } from '@wapl/note-core';
 import { editorContentCSS } from '@mstyles/EditorStyle';
 import { waplIcons } from '../assets/icons';
+import '@mstyles/editor.css';
 
-const Editor = observer(() => {
+interface IProps {
+  setUploadDrawer?: React.Dispatch<SetStateAction<boolean>>;
+}
+
+const Editor: React.FC<IProps> = observer(({ setUploadDrawer }) => {
   const { pageStore, editorStore } = useNoteStore();
   const tempUserId = 'caf1a998-c39e-49d4-81c7-719f6cc624d9';
 
@@ -32,10 +38,12 @@ const Editor = observer(() => {
         ...{
           height: '100%',
           mobile: {
-            plugins: 'table codesample insertdatetime hr link',
-            toolbar: 'undo redo blank blank extra image attach font align-group link',
+            plugins:
+              'print preview paste importcss autolink directionality code visualblocks visualchars fullscreen image link media codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars',
+            toolbar:
+              'undo redo link uploadImage uploadFile formatselect fontselect fontsizeselect bold italic underline strikethrough forecolor backcolor align-group bullist outdent indent',
             toolbar_location: 'bottom',
-            toolbar_mode: 'floating',
+            toolbar_mode: 'scrolling',
             toolbar_sticky: true,
             statusbar: false,
             menubar: false,
@@ -51,34 +59,38 @@ const Editor = observer(() => {
             icon: 'extra',
             items: 'hr table codesample insertdatetime',
           });
-          editor.ui.registry.addGroupToolbarButton('align-group', {
-            icon: 'align-justify',
-            items: 'alignleft aligncenter alignright alignjustify',
+
+          editor.ui.registry.addMenuButton('align-group', {
+            icon: 'align-center',
+            fetch: cb => {
+              const items: any[] = [
+                {
+                  type: 'menuitem',
+                  icon: 'align-left',
+                  onAction: () => editor.execCommand('JustifyLeft'),
+                },
+                { type: 'menuitem', icon: 'align-center', onAction: () => editor.execCommand('JustifyCenter') },
+                { type: 'menuitem', icon: 'align-right', onAction: () => editor.execCommand('JustifyRight') },
+                { type: 'menuitem', icon: 'align-justify', onAction: () => editor.execCommand('JustifyFull') },
+              ];
+              cb(items);
+            },
           });
-          editor.ui.registry.addGroupToolbarButton('font', {
-            icon: 'font',
-            items: 'formatselect fontselect fontsizeselect bold italic underline strikethrough forecolor backcolor',
-          });
-          editor.ui.registry.addButton('image', {
+
+          editor.ui.registry.addButton('uploadImage', {
             icon: 'image',
             onAction() {
               // TODO: 기기에서 이미지 첨부, 드라이브에서 이미지 첨부
-              console.log('insert image');
             },
           });
-          editor.ui.registry.addButton('attach', {
+
+          editor.ui.registry.addButton('uploadFile', {
             icon: 'attach',
             onAction() {
-              // TODO: 기기에서 첨부, 드라이브에서 첨부
-              console.log('attch files');
+              setUploadDrawer(true);
             },
           });
-          editor.ui.registry.addButton('blank', {
-            icon: 'blank',
-            onAction() {
-              console.log('do nothing');
-            },
-          });
+
           editor.on('touchend', e => {
             if (!pageStore.pageInfo.editingUserId || pageStore.pageInfo.editingUserId === tempUserId) return;
             e.preventDefault(); // Remove caret

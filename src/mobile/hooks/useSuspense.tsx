@@ -51,4 +51,5 @@ export default useSuspense;
 
 const Children = styled.div<{ isPending: boolean }>`
   display: ${({ isPending }) => (isPending ? 'none' : 'flex')};
+  height: 100%;
 `;

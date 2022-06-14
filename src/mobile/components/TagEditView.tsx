@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Mui, AppBar, AppBarButton, AppBarCloseButton, FullScreenDialog, Icon, Button } from '@wapl/ui';
+import { useState, useEffect } from 'react';
+import { Mui, AppBar, AppBarCloseButton, FullScreenDialog, Icon, Button } from '@wapl/ui';
 import {
   TagEditViewBody,
   TagInputWrapper,
@@ -9,54 +9,47 @@ import {
   TagChip,
   TagText,
 } from '@mstyles/ContentStyle';
-import { TagModel } from '@wapl/note-core';
+import { useNoteStore, TagModel } from '@wapl/note-core';
 
 type Props = {
   open: boolean;
-  setOpen: (open: boolean) => void;
   tagList: Array<TagModel>;
-  setTagList: (data: Array<TagModel>) => void;
+  onClose: () => void;
 };
 
-const TagEditView: React.FC<Props> = ({ open, setOpen, tagList, setTagList }) => {
+const TagEditView: React.FC<Props> = ({ open, tagList, onClose }) => {
+  const { pageStore, tagStore } = useNoteStore();
   const [inputValue, setInputValue] = useState('');
-  const [tempTagList, setTempTagList] = useState(tagList);
 
-  const handleCloseButtonClick = () => {
-    setOpen(false);
-    setTempTagList(tagList);
-  };
-
-  const handleSaveButtonClick = () => {
-    setOpen(false);
-    setTagList(tempTagList);
-  };
-
-  const handleTagAdd = () => {
+  const handleTagCreate = async () => {
     if (!inputValue) return;
-    setTempTagList([...tempTagList, new TagModel({ id: (tempTagList.length + 1).toString(), name: inputValue })]);
-    setInputValue('');
+    try {
+      const pageId = pageStore.pageInfo.id;
+      await tagStore.createTag(pageId, inputValue);
+      await tagStore.fetchPageTagList(pageId);
+    } catch (error) {
+      console.log('tag create error', error);
+    } finally {
+      setInputValue('');
+    }
   };
 
-  const handleTagDelete = id => () => {
-    setTempTagList(tempTagList.filter(tag => tag.id !== id));
+  const handleTagDelete = (id: string) => async () => {
+    try {
+      const pageId = pageStore.pageInfo.id;
+      await tagStore.deleteTag(pageId, id);
+      await tagStore.fetchPageTagList(pageId);
+    } catch (error) {
+      console.log('tag delete error', error);
+    }
   };
+
+  useEffect(() => {
+    setInputValue('');
+  }, [open]);
 
   return (
-    <FullScreenDialog
-      open={open}
-      header={
-        <AppBar
-          leftSide={<AppBarCloseButton onClick={handleCloseButtonClick} />}
-          title="태그"
-          rightSide={
-            <AppBarButton style={{ color: '#ff6258' }} onClick={handleSaveButtonClick}>
-              저장
-            </AppBarButton>
-          }
-        />
-      }
-    >
+    <FullScreenDialog open={open} header={<AppBar leftSide={<AppBarCloseButton onClick={onClose} />} title="태그" />}>
       <TagEditViewBody>
         <TagInputWrapper>
           <InputField>
@@ -67,10 +60,10 @@ const TagEditView: React.FC<Props> = ({ open, setOpen, tagList, setTagList }) =>
               </Mui.IconButton>
             )}
           </InputField>
-          <Button onClick={handleTagAdd}>추가</Button>
+          <Button onClick={handleTagCreate}>추가</Button>
         </TagInputWrapper>
         <TagListWrapper>
-          {tempTagList?.map(tag => (
+          {tagList?.map(tag => (
             <TagChip key={tag.id}>
               <TagText>{tag.name}</TagText>
               <Mui.IconButton style={{ padding: 0 }} onClick={handleTagDelete(tag.id)}>

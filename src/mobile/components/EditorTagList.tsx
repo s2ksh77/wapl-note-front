@@ -13,7 +13,7 @@ const EditorTagList: React.FC<Props> = ({ data, isReadMode }) => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
   const { pageStore } = useNoteStore();
   const [isTagEditViewOpen, setIsTagEditViewOpen] = useState(false);
-  const [tagList, setTagList] = useState(data);
+
   const handleTagPress = async () => {
     if (pageStore.pageInfo.editingUserId) {
       // TODO: 다른 멤버가 수정 중인 경우 에러 팝업 호출
@@ -50,7 +50,7 @@ const EditorTagList: React.FC<Props> = ({ data, isReadMode }) => {
           </TagChip>
         ))}
       </TagListWrapper>
-      <TagEditView open={isTagEditViewOpen} setOpen={setIsTagEditViewOpen} tagList={tagList} setTagList={setTagList} />
+      <TagEditView open={isTagEditViewOpen} tagList={data} onClose={() => setIsTagEditViewOpen(false)} />
     </EditorTagListWrapper>
   );
 };

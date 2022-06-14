@@ -1,37 +1,58 @@
 import { useState } from 'react';
 import { Mui, Icon } from '@wapl/ui';
 import { EditorTagListWrapper, TagListWrapper, TagChip, TagText } from '@mstyles/ContentStyle';
-import { observer } from 'mobx-react';
 import TagEditView from '@mcomponents/TagEditView';
-import { TagModel } from '@wapl/note-core';
+import { useNoteStore, TagModel } from '@wapl/note-core';
 
 type Props = {
   data: Array<TagModel>;
   isReadMode: boolean;
 };
 
-const EditorTagList: React.FC<Props> = observer(({ data, isReadMode }) => {
+const EditorTagList: React.FC<Props> = ({ data, isReadMode }) => {
+  const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
+  const { pageStore } = useNoteStore();
   const [isTagEditViewOpen, setIsTagEditViewOpen] = useState(false);
   const [tagList, setTagList] = useState(data);
+  const handleTagPress = async () => {
+    if (pageStore.pageInfo.editingUserId) {
+      // TODO: 다른 멤버가 수정 중인 경우 에러 팝업 호출
+      return;
+    }
+    try {
+      const { editingUserId } = await pageStore.editPage(
+        tempChannelId,
+        pageStore.pageInfo.chapterId,
+        pageStore.pageInfo,
+      );
+      pageStore.pageInfo.editingUserId = editingUserId;
+      setIsTagEditViewOpen(true);
+    } catch (error) {
+      console.log('edit start error', error);
+    }
+  };
 
   return (
     <EditorTagListWrapper isReadMode={isReadMode}>
-      <Mui.IconButton style={{ padding: 0, marginRight: '12px' }} onClick={() => setIsTagEditViewOpen(true)}>
-        <Icon.TagLine width={20} height={20} />
-      </Mui.IconButton>
+      {isReadMode ? (
+        <Mui.IconButton style={{ padding: 0, marginRight: '12px' }} onClick={handleTagPress}>
+          <Icon.TagLine width={20} height={20} />
+        </Mui.IconButton>
+      ) : (
+        <Mui.IconButton style={{ padding: 0, marginRight: '12px' }} onClick={() => setIsTagEditViewOpen(true)}>
+          <Icon.AddTagLine width={20} height={20} />
+        </Mui.IconButton>
+      )}
       <TagListWrapper style={{ flexWrap: 'nowrap', whiteSpace: 'nowrap', overflowX: 'auto', paddingRight: '6px' }}>
-        {tagList?.map(tag => (
+        {data?.map(tag => (
           <TagChip key={tag.id}>
             <TagText>{tag.name}</TagText>
-            <Mui.IconButton style={{ padding: 0 }}>
-              <Icon.DeleteFill width={14} height={14} color="#868686" />
-            </Mui.IconButton>
           </TagChip>
         ))}
       </TagListWrapper>
       <TagEditView open={isTagEditViewOpen} setOpen={setIsTagEditViewOpen} tagList={tagList} setTagList={setTagList} />
     </EditorTagListWrapper>
   );
-});
+};
 
 export default EditorTagList;

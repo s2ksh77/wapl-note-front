@@ -8,6 +8,7 @@ import {
   PageContent,
   PageBookmarkWrapper,
 } from '@mstyles/ListItemStyle';
+import { STagChipContainer } from '../styles/BodyStyle';
 
 interface ITag {
   id: string;
@@ -51,9 +52,11 @@ const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, handleBo
             .replace(/&gt;/gi, '>')}
         </PageContent>
       </PageItemBodyWrapper>
-      {tagList?.map((tag: any) => {
-        return <SChip {...tag} label={tag?.name} type="filter" />;
-      })}
+      <STagChipContainer>
+        {tagList?.map((tag: any) => {
+          return <SChip {...tag} label={tag?.name} type="filter" />;
+        })}
+      </STagChipContainer>
     </PageItemWrapper>
   );
 };

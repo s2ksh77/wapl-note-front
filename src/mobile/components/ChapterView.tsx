@@ -142,10 +142,22 @@ const ChapterView: React.FC = observer(() => {
   };
 
   const handlePageDelete = async () => {
-    const item = getSelectedItems();
-    const model = item.map(pageId => new PageModel({ id: pageId, chapterId: id }));
-    await pageStore.throwPage(tempChannelId, model);
-    handleCloseButtonPress();
+    try {
+      const pageIds = getSelectedItems();
+      const editingUserIds = await pageStore.getEditingUserIds(pageIds, tempChannelId);
+      if (editingUserIds.length > 0) {
+        // TODO: 삭제 불가 팝업
+      } else {
+        await pageStore.throwPage(
+          tempChannelId,
+          pageIds.map(pageId => new PageModel({ id: pageId, chapterId: id })),
+        );
+      }
+      handleCloseButtonPress();
+    } catch (error) {
+      console.log('page throw error', error);
+    }
+  };
 
   const handleChapterDelete = async () => {
     try {

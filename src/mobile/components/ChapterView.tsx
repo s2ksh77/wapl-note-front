@@ -323,6 +323,7 @@ const ChapterView: React.FC = observer(() => {
                   try {
                     const res = await chapterStore.renameChapter(new ChapterModel({ id, name }), tempChannelId);
                     setChapterName(res.name);
+                    uiStore.setHeaderTitle(res.name);
                   } catch (error) {
                     console.log('renameChapter error', error);
                   }

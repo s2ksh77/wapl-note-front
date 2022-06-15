@@ -1,6 +1,7 @@
 import React from 'react';
 import { SearchField } from '@wapl/ui';
 import { SearchFieldWrapper } from '@mstyles/HeaderStyle';
+import useRoute from '@/mobile/hooks/useRoute';
 
 interface Props {
   value: string;
@@ -10,11 +11,12 @@ interface Props {
 }
 
 const SearchBar: React.FC<Props> = ({ value, onChange, onCancel, onEnter }) => {
+  const { isTag } = useRoute();
   return (
     <SearchFieldWrapper>
       <SearchField
         btnText="취소"
-        placeholder="페이지, 챕터 검색"
+        placeholder={!isTag ? '페이지, 챕터 검색' : '태그 검색'}
         variant="filled"
         value={value}
         onChange={onChange}

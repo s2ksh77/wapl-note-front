@@ -25,7 +25,7 @@ type Props = {
 const PageList: React.FC<Props> = ({ pageList, setPageList, isSelected, toggleSelected, isRecycleBin }) => {
   const navigate = useNavigate();
   const { navTab } = useParams();
-  const { pageStore } = useNoteStore();
+  const { pageStore, uiStore } = useNoteStore();
   const { routeTo } = useRoute();
 
   const handleItemLongPress = (id: string) => () => {
@@ -44,6 +44,8 @@ const PageList: React.FC<Props> = ({ pageList, setPageList, isSelected, toggleSe
     navigate(routeTo('content'), {
       state: { id, ...{ panel: 'content', isNewPage: false, isRecycleBin } },
     });
+    // search에서 클릭시 뒤로가기 토글
+    if (uiStore.isSearching) uiStore.toggleSearchBar();
   };
 
   const handleBookmarkPress = async (id, favorite) => {
@@ -55,8 +57,8 @@ const PageList: React.FC<Props> = ({ pageList, setPageList, isSelected, toggleSe
   };
 
   return (
-    <PageListWrapper isList={!!pageList.length}>
-      {pageList.map(page => (
+    <PageListWrapper isList={!!pageList?.length}>
+      {pageList?.map(page => (
         <React.Fragment key={page.id}>
           <LongPressable
             onLongPress={handleItemLongPress(page.id)}

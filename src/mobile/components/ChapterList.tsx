@@ -29,7 +29,7 @@ type Props = {
 const ChapterList: React.FC<Props> = observer(
   ({ chapterList, isSelected, toggleSelected, showDivider, isRecycleBin, panel = 'page' }) => {
     const navigate = useNavigate();
-    const { noteViewStore } = useNoteStore();
+    const { noteViewStore, uiStore } = useNoteStore();
     const { routeTo } = useRoute();
 
     const handleItemLongPress = useCallback(
@@ -51,12 +51,14 @@ const ChapterList: React.FC<Props> = observer(
       navigate(routeTo(panel), {
         state: { panel: 'page', id, isRecycleBin },
       });
+      // search에서 클릭시 뒤로가기 토글
+      if (uiStore.isSearching) uiStore.toggleSearchBar();
       console.log(`item ${id} pressed`);
     };
 
     return (
       <NoteViewChapterListWrapper showDivider={showDivider}>
-        {chapterList.map(chapter => (
+        {chapterList?.map(chapter => (
           <React.Fragment key={chapter.id}>
             <LongPressable
               onLongPress={handleItemLongPress(chapter.id)}

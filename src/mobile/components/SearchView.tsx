@@ -1,54 +1,26 @@
 /* eslint-disable consistent-return */
 import { NoteViewBodyWrapper as SearchViewBodyWrapper, Scrollable, SearchResultWrapper } from '@mstyles/ContentStyle';
 import { useNoteStore } from '@wapl/note-core';
-import { Icon } from '@wapl/ui';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MenuType, TLocation } from '../@types/common';
+import useRoute from '../hooks/useRoute';
+import useSearch from '../hooks/useSearch';
 import ChapterList from './ChapterList';
 import FilterChipContainer from './FilterChipContainer';
 import PageList from './PageList';
-import RoomList from './RoomList';
 
 const SearchView: React.FC = () => {
-  const {
-    state: { searchResult },
-  } = useLocation() as TLocation;
+  const { state } = useLocation() as TLocation;
+  const searchResult = state?.searchResult;
   const { uiStore } = useNoteStore();
+  const { handleSearch } = useSearch();
+  const { isSearch } = useRoute();
   const [selectFilter, setSelectFilter] = useState('');
-
-  const roomList = [
-    {
-      id: 'roomId1',
-      name: 'Example_Room_01',
-      userCount: 9,
-      avatar: <Icon.Emoji6Color />,
-    },
-    {
-      id: 'roomId2',
-      name: 'Example_Room_02',
-      userCount: 9,
-      avatar: <Icon.Emoji6Color />,
-    },
-    {
-      id: 'roomId3',
-      name: 'Example_Room_03',
-      userCount: 3,
-      avatar: <Icon.Emoji6Color />,
-    },
-    {
-      id: 'roomId4',
-      name: 'Example_Room_04',
-      userCount: 1,
-      avatar: <Icon.Emoji6Color />,
-    },
-  ];
 
   const RenderView = React.memo(() => {
     if (!selectFilter) return <RenderAll />;
     switch (selectFilter) {
-      case MenuType.TALKROOM:
-        return <RoomList roomList={roomList} />;
       case MenuType.CHAPTER:
         return (
           <ChapterList
@@ -69,7 +41,6 @@ const SearchView: React.FC = () => {
   const RenderAll = React.memo(() => {
     return (
       <>
-        <RoomList roomList={roomList} />
         <ChapterList
           chapterList={searchResult?.chapterList}
           isSelected={id => false}
@@ -89,6 +60,29 @@ const SearchView: React.FC = () => {
       uiStore.setSelectFilter('');
     }
   }, []);
+
+  useEffect(() => {
+    if (searchResult === undefined && localStorage.getItem('searchKey')) {
+      const searchKey = localStorage.getItem('searchKey');
+      uiStore.toggleSearchBar();
+      uiStore.setSearchKey(searchKey);
+      handleSearch(searchKey);
+      localStorage.removeItem('searchKey');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isSearch) {
+      return () => {
+        uiStore.toggleSearchBar();
+        uiStore.setSearchKey('');
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!uiStore.isSearching) uiStore.toggleSearchBar();
+  }, [uiStore.isSearching]);
 
   return (
     <SearchViewBodyWrapper>

@@ -48,7 +48,7 @@ const NoteHeader = observer(() => {
     return buttons.map(button => {
       switch (button.action) {
         case 'back':
-          return <AppBarBackButton to={-1} />;
+          return <AppBarBackButton onClick={() => navigate(-1)} />;
         case 'close':
           return <AppBarCloseButton onClick={button.onClick} />;
         default:

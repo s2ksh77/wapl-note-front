@@ -3,10 +3,12 @@ import { observer } from 'mobx-react-lite';
 import { Icon, AppBar, AppBarButton, AppBarBackButton, AppBarCloseButton } from '@wapl/ui';
 import { useNoteStore } from '@wapl/note-core';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import SearchBar from './SearchBar';
 import InPageSearchBar from './InPageSearchBar';
 import useSearch from '@/mobile/hooks/useSearch';
 import { ROUTES, SEARCH_DETAIL, PAGE_DETAIL } from '@/mobile/constant/routes';
+import useRoute from '@/mobile/hooks/useRoute';
 
 export type TLocation = {
   pathname: string;
@@ -29,7 +31,8 @@ const NoteHeader = observer(() => {
   const { pathname } = useLocation();
   const { navTab } = useParams();
   const navigate = useNavigate();
-  const { handleCancel, handleChange, handleSearch, getValue } = useSearch();
+  const { handleCancel, handleChange, handleSearch, getValue, setValue } = useSearch();
+  const { isSearch } = useRoute();
 
   const ButtonIcon = {
     search: <Icon.SearchLine width={24} height={24} />,
@@ -64,10 +67,22 @@ const NoteHeader = observer(() => {
 
   const handleSearchVisible = () => {
     uiStore.toggleSearchBar();
-    if (pathname.includes(SEARCH_DETAIL)) handelSearchCancel();
+    if (pathname.includes(SEARCH_DETAIL)) handleSearchCancel();
   };
 
-  const handelSearchCancel = () => navigate(navTab ? `${navTab}` : `${ROUTES.MY_NOTE}`);
+  const handleSearchCancel = () => {
+    navigate(navTab ? `${navTab}` : `${ROUTES.MY_NOTE}`);
+    uiStore.setSearchKey('');
+  };
+
+  useEffect(() => {
+    // navTab 이동시 초기화
+    if (!isSearch && uiStore.isSearching) {
+      uiStore.toggleSearchBar();
+      uiStore.setSearchKey('');
+      setValue('');
+    }
+  }, [window.location.pathname]);
 
   return !uiStore.isSearching ? (
     <AppBar
@@ -80,7 +95,7 @@ const NoteHeader = observer(() => {
     <InPageSearchBar handleSearchVisible={handleSearchVisible} />
   ) : (
     <SearchBar
-      value={getValue}
+      value={getValue || uiStore.searchKey}
       onChange={handleChange}
       onEnter={() => handleSearch(getValue)}
       onCancel={() => handleCancel(handleSearchVisible)}

@@ -15,6 +15,7 @@ import useMultiSelect from '../hooks/useMultiSelect';
 import { TLocation } from '../@types/common';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '../constant/routes';
 import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
+import useRoute from '../hooks/useRoute';
 
 // React.lazy 동작 안하려면 위에 import 부분 주석 해제, 이 부분 주석
 // EmptyChapterView 잠시 빠짐
@@ -35,6 +36,7 @@ const ChapterView: React.FC = observer(() => {
   const tagId = state?.tagId;
   const navigation = useNavigate();
   const { navTab } = useParams();
+  const { isSearch } = useRoute();
 
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount, getSelectedItems } = useMultiSelect();
   const [pageList, setPageList] = useState([]);
@@ -225,9 +227,16 @@ const ChapterView: React.FC = observer(() => {
       chapterStore.currentId = id;
     } else {
       chapterStore.currentId = localStorage.getItem('noteParam');
+      if (isSearch) searchKeep();
     }
+
     fetchList(chapterStore.currentId);
   }, [navTab]);
+
+  const searchKeep = () => {
+    uiStore.setSearchKey(localStorage.getItem('searchKey'));
+    localStorage.removeItem('searchKey');
+  };
 
   return (
     <ContentWrapper>

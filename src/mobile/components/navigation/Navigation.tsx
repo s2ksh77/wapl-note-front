@@ -1,7 +1,6 @@
-import { NavigationWrapper, Tabs, Tab } from '@mstyles/FooterStyle';
+import { NavigationWrapper, Tabs } from '@mstyles/FooterStyle';
 import { Icon } from '@wapl/ui';
 import { useNavigate } from 'react-router-dom';
-// import { TLocation } from '@mcomponents/NoteAppBar';
 import { ROUTES } from '@/mobile/constant/routes';
 import NavigationTabs from './NavigationTabs';
 import useRoute from '@/mobile/hooks/useRoute';

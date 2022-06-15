@@ -34,7 +34,7 @@ const PageView: React.FC = observer(() => {
   const isNewPage = state?.isNewPage;
   const isRecycleBin = state?.isRecycleBin;
   const { pageStore, tagStore, editorStore, uiStore } = useNoteStore();
-  const { goBack } = useRoute();
+  const { goBack, isSearch } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isUploadImageOpen, setUploadImageDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -126,7 +126,7 @@ const PageView: React.FC = observer(() => {
   ];
 
   const fetchPageInfoList = async () => {
-    await pageStore.fetchPageInfoList(id, tempChannelId);
+    await pageStore.fetchPageInfoList(id || pageStore.currentId, tempChannelId);
     tagStore.pageTagList = pageStore.pageInfo.tagList.map((tagData: TagDTO) => new TagModel(tagData));
   };
 
@@ -136,12 +136,18 @@ const PageView: React.FC = observer(() => {
       pageStore.currentId = id;
     } else {
       pageStore.currentId = localStorage.getItem('noteParam');
+      if (isSearch) searchKeep();
     }
-    setNewPage(isNewPage);
-    if (!isNewPage) {
+    setNewPage(isNewPage === undefined ? false : isNewPage);
+    if (!newPage) {
       fetchPageInfoList();
     }
   }, [isNewPage]);
+
+  const searchKeep = () => {
+    uiStore.setSearchKey(localStorage.getItem('searchKey'));
+    localStorage.removeItem('searchKey');
+  };
 
   const handleBookmarkPress = async () => {
     try {

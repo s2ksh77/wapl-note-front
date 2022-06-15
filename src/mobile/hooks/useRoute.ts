@@ -16,12 +16,12 @@ import {
   TAG_DETAIL,
   TAG_CHAPTER,
   TAG_PAGE,
+  PANEL_TAG,
 } from '@mconstant/routes';
 
 const useRoute = () => {
   const navigate = useNavigate();
   const { navTab } = useParams();
-  const { pathname } = useLocation() as TLocation;
 
   const navPath = useCallback(() => {
     if (!navTab) return MY_NOTE;
@@ -36,8 +36,10 @@ const useRoute = () => {
         return CHAPTER_DETAIL;
       case PANEL_SEARCH:
         return '';
+      case PANEL_TAG:
+        return TAG_DETAIL;
       case PANEL_CONTENT:
-        return PAGE_DETAIL; // TODO: tag 쪽 panel정의
+        return PAGE_DETAIL;
       case TAG_CHAPTER:
       case PANEL_SEARCH_CHAPTER:
         return CHAPTER_DETAIL;
@@ -64,14 +66,14 @@ const useRoute = () => {
 
   const routeTo = useCallback(
     (panel?: string) => {
-      console.log(pathname, panel, pathname.includes(TAG_DETAIL));
+      const { pathname } = window.location;
       if (pathname === navPath() && !panel) return pathname; // case 1
       if (panel !== 'search' && !pathname.includes(SEARCH_DETAIL) && !pathname.includes(TAG_DETAIL))
         return `${navPath()}${panelPath(panel)}`; // case 2
       if (pathname.includes(TAG_DETAIL)) return `${navPath()}${TAG_DETAIL}${panelPath(panel)}`; // case 4
       return `${navPath()}${SEARCH_DETAIL}${panelPath(panel)}`; // case 3
     },
-    [navPath, panelPath, pathname],
+    [navPath, panelPath, window.location.pathname],
   );
 
   const goBack = useCallback(() => {
@@ -81,7 +83,9 @@ const useRoute = () => {
   return {
     goBack,
     routeTo,
-    isContent: pathname.includes(PANEL_PAGE),
+    isContent: window.location.pathname.includes(PANEL_PAGE),
+    isSearch: window.location.pathname.includes(PANEL_SEARCH),
+    isTag: window.location.pathname.includes(PANEL_TAG),
   };
 };
 

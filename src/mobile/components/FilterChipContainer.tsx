@@ -17,8 +17,6 @@ const FilterChipContainer: React.FC<Props> = ({ selectFilter, setSelectFilter, i
 
   const getLabel = () => {
     switch (selectFilter) {
-      case MenuType.TALKROOM:
-        return '톡 룸';
       case MenuType.CHAPTER:
         return '챕터';
       case MenuType.PAGE:
@@ -30,12 +28,6 @@ const FilterChipContainer: React.FC<Props> = ({ selectFilter, setSelectFilter, i
   };
 
   const initialchips = [
-    {
-      id: 'talk',
-      label: '톡 룸',
-      onDelete: null,
-      onClick: () => setSelectFilter(MenuType.TALKROOM),
-    },
     {
       id: 'chapter',
       label: '챕터',
@@ -82,7 +74,7 @@ const FilterChipContainer: React.FC<Props> = ({ selectFilter, setSelectFilter, i
   return (
     <FilterChipWrapper>
       {filterChips.map(chip => {
-        return <SChip {...chip} type="filter" />;
+        return <SChip key={chip.id} {...chip} type="filter" />;
       })}
     </FilterChipWrapper>
   );

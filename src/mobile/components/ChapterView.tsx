@@ -147,7 +147,20 @@ const ChapterView: React.FC = observer(() => {
     await pageStore.throwPage(tempChannelId, model);
     handleCloseButtonPress();
 
-    // TODO: Toast 팝업
+  const handleChapterDelete = async () => {
+    try {
+      const editingUserIds = await chapterStore.getEditingUserIds([id], tempChannelId);
+      if (editingUserIds.length > 0) {
+        setIsDeleteDialogOpen(false);
+        // TODO: 삭제 불가 팝업
+      } else {
+        await chapterStore.deleteChapter([new ChapterModel({ id })], tempChannelId);
+        setIsDeleteDialogOpen(false);
+        navigation(-1);
+      }
+    } catch (error) {
+      console.log('chapter delete error', error);
+    }
   };
 
   const fetchList = async id => {
@@ -318,7 +331,7 @@ const ChapterView: React.FC = observer(() => {
               {
                 variant: 'confirm',
                 text: '삭제',
-                onClick: () => setIsDeleteDialogOpen(false),
+                onClick: handleChapterDelete,
               },
             ]}
           />

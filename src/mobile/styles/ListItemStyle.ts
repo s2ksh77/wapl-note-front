@@ -90,6 +90,8 @@ export const PageRestoreViewChapterListWrapper = styled.div`
   display: flex;
   width: auto;
   height: 100%;
+  overflow-y: auto;
+  padding-inline: 18px;
   flex-direction: column;
 `;
 

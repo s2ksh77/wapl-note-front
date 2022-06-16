@@ -13,11 +13,12 @@ import {
 import { PageItemDivider as PageViewDivider } from '@mstyles/ListItemStyle';
 import EditorTagList from '@mcomponents/EditorTagList';
 import BottomDrawer from '@mcomponents/BottomDrawer';
-
+import PageRestoreView from '@mcomponents/PageRestoreView';
 import RenameDialog from '@mcomponents/dialog/InputDialog';
+import RestoreDialog from '@mcomponents/dialog/ConfirmDialog';
 import { useLocation } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
-import { useNoteStore, PageModel, TagModel } from '@wapl/note-core';
+import { useNoteStore, PageModel, TagModel, ChapterModel } from '@wapl/note-core';
 import { TagDTO } from '@wapl/note-core/dist/dts/models/dto/TagDTO';
 import { TLocation } from '../@types/common';
 
@@ -33,11 +34,13 @@ const PageView: React.FC = observer(() => {
   const id = state?.id;
   const isNewPage = state?.isNewPage;
   const isRecycleBin = state?.isRecycleBin;
-  const { pageStore, tagStore, editorStore, uiStore } = useNoteStore();
+  const { chapterStore, pageStore, tagStore, editorStore, uiStore } = useNoteStore();
   const { goBack, isSearch } = useRoute();
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isUploadImageOpen, setUploadImageDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const [isRestoreViewOpen, setIsRestoreViewOpen] = useState(false);
+  const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
   const [newPage, setNewPage] = useState(false);
 
   const moreItems = [
@@ -109,18 +112,12 @@ const PageView: React.FC = observer(() => {
       action: 'restore',
       text: '복원',
       onClick: async () => {
-        if (!pageStore.pageInfo.restoreChapterId) {
-          // TODO: 복원될 챕터 선택 화면 띄우기
-          setIsMoreDrawerOpen(false);
-          return;
-        }
-
-        try {
-          await pageStore.restorePage(tempChannelId, [pageStore.pageInfo]);
-          setIsMoreDrawerOpen(false);
-          goBack();
-        } catch (error) {
-          console.log('restorePage Error', error);
+        const { normal } = await chapterStore.getChapterList('79b3f1b3-85dc-4965-a8a2-0c4c56244b82'); // chId 관리 필요
+        setIsMoreDrawerOpen(false);
+        if (normal.length === 0) {
+          setIsRestoreDialogOpen(true);
+        } else {
+          setIsRestoreViewOpen(true);
         }
       },
     },
@@ -277,6 +274,43 @@ const PageView: React.FC = observer(() => {
               } catch (error) {
                 console.log('renamePage Error', error);
               }
+            },
+          },
+        ]}
+      />
+      <PageRestoreView
+        open={isRestoreViewOpen}
+        restoreChapterId={pageStore.pageInfo.restoreChapterId}
+        onClose={() => {
+          setIsRestoreViewOpen(false);
+        }}
+      />
+      <RestoreDialog
+        open={isRestoreDialogOpen}
+        title="페이지 복원"
+        content="새 챕터에 해당 페이지가 복원됩니다."
+        buttons={[
+          {
+            variant: 'dismiss',
+            text: '취소',
+            onClick: () => setIsRestoreDialogOpen(false),
+          },
+          {
+            variant: 'confirm',
+            text: '복원',
+            onClick: async () => {
+              const res = await chapterStore.createChapter(
+                new ChapterModel({
+                  color: chapterStore.RandomColor,
+                  name: '새 챕터',
+                }),
+                'ko',
+                '79b3f1b3-85dc-4965-a8a2-0c4c56244b82',
+              );
+              pageStore.pageInfo.restoreChapterId = res.id;
+              await pageStore.restorePage(tempChannelId, [pageStore.pageInfo]);
+              goBack();
+              setIsRestoreDialogOpen(false);
             },
           },
         ]}

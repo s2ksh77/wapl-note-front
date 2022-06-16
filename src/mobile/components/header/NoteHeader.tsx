@@ -32,7 +32,7 @@ const NoteHeader = observer(() => {
   const { navTab } = useParams();
   const navigate = useNavigate();
   const { handleCancel, handleChange, handleSearch, getValue, setValue } = useSearch();
-  const { isSearch } = useRoute();
+  const { goBack, isSearch } = useRoute();
 
   const ButtonIcon = {
     search: <Icon.SearchLine width={24} height={24} />,
@@ -48,7 +48,7 @@ const NoteHeader = observer(() => {
     return buttons.map(button => {
       switch (button.action) {
         case 'back':
-          return <AppBarBackButton to={-1} />;
+          return <AppBarBackButton onClick={goBack} />;
         case 'close':
           return <AppBarCloseButton onClick={button.onClick} />;
         default:

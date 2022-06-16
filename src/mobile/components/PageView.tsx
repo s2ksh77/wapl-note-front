@@ -69,9 +69,15 @@ const PageView: React.FC = observer(() => {
       text: '삭제',
       onClick: async () => {
         try {
-          await pageStore.throwPage(tempChannelId, [pageStore.pageInfo]);
-          setIsMoreDrawerOpen(false);
-          goBack();
+          await pageStore.fetchPageInfoList(id, tempChannelId);
+          if (pageStore.pageInfo.editingUserId) {
+            setIsMoreDrawerOpen(false);
+            // TODO: 삭제 불가 팝업
+          } else {
+            await pageStore.throwPage(tempChannelId, [pageStore.pageInfo]);
+            setIsMoreDrawerOpen(false);
+            goBack();
+          }
         } catch (error) {
           console.log('throwPage Error', error);
         }

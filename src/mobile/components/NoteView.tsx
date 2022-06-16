@@ -15,13 +15,14 @@ import FilterChipContainer from './FilterChipContainer';
 const ChapterList = React.lazy(() => import('@mcomponents/ChapterList'));
 
 const NoteView: React.FC = () => {
+  const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
   const { noteViewStore, chapterStore, uiStore } = useNoteStore();
   const [newChapterButtonVisible, setNewChapterButtonVisible] = useState(true);
   const [isNewChapterDialogOpen, setIsNewChapterDialogOpen] = useState(false);
   const [chapterList, setChapterList] = useState([]);
   const [sharedChapterList, setSharedChapterList] = useState([]);
   const [recycleBin, setRecycleBin] = useState([]);
-  const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount } = useMultiSelect();
+  const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedItems, getSelectedCount } = useMultiSelect();
   const [selectFilter, setSelectFilter] = useState('');
   const { isPending, isFullfilled, Suspense, setIsFullfilled } = useSuspense({ delay: 1000 });
 
@@ -33,7 +34,7 @@ const NoteView: React.FC = () => {
         name,
       }),
       'ko',
-      '79b3f1b3-85dc-4965-a8a2-0c4c56244b82',
+      tempChannelId,
     );
 
     setIsNewChapterDialogOpen(false);
@@ -43,6 +44,26 @@ const NoteView: React.FC = () => {
     noteViewStore.toggleMultiSelectMode();
     deSelectAll();
   }, []);
+
+  const handleDeletePress = async () => {
+    try {
+      const chapterIds = getSelectedItems();
+      const editingUserIds = await chapterStore.getEditingUserIds(chapterIds, tempChannelId);
+      if (editingUserIds.length > 0) {
+        // TODO: 삭제 불가 팝업
+      } else {
+        await chapterStore.deleteChapter(
+          chapterIds.map(id => new ChapterModel({ id })),
+          tempChannelId,
+        );
+        await fetchChapterList();
+      }
+      noteViewStore.toggleMultiSelectMode();
+      deSelectAll();
+    } catch (error) {
+      console.log('chapter delete error', error);
+    }
+  };
 
   const handleSelectAllPress = () => {
     selectAll(chapterList.map(chapter => chapter.id).concat(sharedChapterList.map(chapter => chapter.id)));
@@ -66,7 +87,7 @@ const NoteView: React.FC = () => {
       title: `${getSelectedCount()}개 선택됨`,
       leftSide: [{ action: 'close', onClick: handleClosePress }],
       rightSide: [
-        { action: 'delete', onClick: () => console.log('delete') },
+        { action: 'delete', onClick: handleDeletePress },
         { action: 'share', onClick: () => console.log('share') },
         isAllSelected
           ? { action: 'deselect', onClick: handleDeselectAllPress }
@@ -76,7 +97,7 @@ const NoteView: React.FC = () => {
   }, [noteViewStore.isLongPressed, getSelectedCount]);
 
   const fetchChapterList = async () => {
-    const { normal, shared, recycle } = await chapterStore.getChapterList('79b3f1b3-85dc-4965-a8a2-0c4c56244b82'); // chId 관리 필요
+    const { normal, shared, recycle } = await chapterStore.getChapterList(tempChannelId); // chId 관리 필요
     setChapterList(normal);
     setSharedChapterList(shared);
     setRecycleBin(recycle);

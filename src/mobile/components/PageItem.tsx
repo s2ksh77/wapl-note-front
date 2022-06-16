@@ -52,16 +52,22 @@ const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, handleBo
             .replace(/&gt;/gi, '>')}
         </PageContent>
       </PageItemBodyWrapper>
-      <STagChipContainer>
-        {tagList?.map((tag: any) => {
-          return <SChip {...tag} label={tag?.name} type="filter" />;
-        })}
-      </STagChipContainer>
+      {tagList.length > 0 && (
+        <STagChipContainer>
+          {tagList.map((tag: any) => {
+            return <SChip {...tag} label={tag?.name} type="filter" />;
+          })}
+        </STagChipContainer>
+      )}
     </PageItemWrapper>
   );
 };
 
 export default PageItem;
+
+PageItem.defaultProps = {
+  tagList: [],
+};
 
 const SChip = styled(Chip)`
   :not(:last-child) {

@@ -36,7 +36,7 @@ const ChapterView: React.FC = observer(() => {
   const tagId = state?.tagId;
   const navigation = useNavigate();
   const { navTab } = useParams();
-  const { isSearch } = useRoute();
+  const { goBack, isSearch } = useRoute();
 
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount, getSelectedItems } = useMultiSelect();
   const [pageList, setPageList] = useState([]);
@@ -142,12 +142,37 @@ const ChapterView: React.FC = observer(() => {
   };
 
   const handlePageDelete = async () => {
-    const item = getSelectedItems();
-    const model = item.map(pageId => new PageModel({ id: pageId, chapterId: id }));
-    await pageStore.throwPage(tempChannelId, model);
-    handleCloseButtonPress();
+    try {
+      const pageIds = getSelectedItems();
+      const editingUserIds = await pageStore.getEditingUserIds(pageIds, tempChannelId);
+      if (editingUserIds.length > 0) {
+        // TODO: 삭제 불가 팝업
+      } else {
+        await pageStore.throwPage(
+          tempChannelId,
+          pageIds.map(pageId => new PageModel({ id: pageId, chapterId: id })),
+        );
+      }
+      handleCloseButtonPress();
+    } catch (error) {
+      console.log('page throw error', error);
+    }
+  };
 
-    // TODO: Toast 팝업
+  const handleChapterDelete = async () => {
+    try {
+      const editingUserIds = await chapterStore.getEditingUserIds([id], tempChannelId);
+      if (editingUserIds.length > 0) {
+        setIsDeleteDialogOpen(false);
+        // TODO: 삭제 불가 팝업
+      } else {
+        await chapterStore.deleteChapter([new ChapterModel({ id })], tempChannelId);
+        setIsDeleteDialogOpen(false);
+        goBack();
+      }
+    } catch (error) {
+      console.log('chapter delete error', error);
+    }
   };
 
   const fetchList = async id => {
@@ -298,6 +323,7 @@ const ChapterView: React.FC = observer(() => {
                   try {
                     const res = await chapterStore.renameChapter(new ChapterModel({ id, name }), tempChannelId);
                     setChapterName(res.name);
+                    uiStore.setHeaderTitle(res.name);
                   } catch (error) {
                     console.log('renameChapter error', error);
                   }
@@ -318,7 +344,7 @@ const ChapterView: React.FC = observer(() => {
               {
                 variant: 'confirm',
                 text: '삭제',
-                onClick: () => setIsDeleteDialogOpen(false),
+                onClick: handleChapterDelete,
               },
             ]}
           />

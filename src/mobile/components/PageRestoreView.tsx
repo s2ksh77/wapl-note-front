@@ -12,7 +12,6 @@ type Props = {
   open: boolean;
   restoreChapterId?: string;
   onClose: () => void;
-  onSuccess?: () => void;
 };
 
 const PageRestoreView: React.FC<Props> = ({ open, restoreChapterId, onClose: handleClose }) => {

@@ -26,6 +26,7 @@ const CategoriesList: React.FC = observer(() => {
     navigate(routeTo(TAG_CHAPTER), {
       state: { tagId },
     });
+    localStorage.setItem('noteParam', tagId);
   };
 
   return (
@@ -33,7 +34,7 @@ const CategoriesList: React.FC = observer(() => {
       <div style={{ overflowY: 'auto' }}>
         {Object.entries(tagStore.sortedTagList).map(([category, values]) => {
           return (
-            <Mui.Accordion style={{ margin: 0, minHeight: 64 }} key={category}>
+            <Mui.Accordion style={{ margin: 0, minHeight: 64 }} key={category} expanded={!!values}>
               <Mui.AccordionSummary
                 expandIcon={<Icon.ArrowBottomLine />}
                 aria-controls="panel1a-content"

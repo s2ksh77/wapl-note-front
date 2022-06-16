@@ -36,7 +36,7 @@ const ChapterView: React.FC = observer(() => {
   const tagId = state?.tagId;
   const navigation = useNavigate();
   const { navTab } = useParams();
-  const { goBack, isSearch } = useRoute();
+  const { goBack, isSearch, isTagChapter } = useRoute();
 
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount, getSelectedItems } = useMultiSelect();
   const [pageList, setPageList] = useState([]);
@@ -175,14 +175,19 @@ const ChapterView: React.FC = observer(() => {
     }
   };
 
+  const fetchTagPageList = async tagId => {
+    const res = await tagStore.fetchTagPageList(tagId, tempChannelId);
+    setPageList(res);
+    setChapterName('');
+    uiStore.setHeaderTitle('');
+  };
+
   const fetchList = async id => {
     const searchButtonInfo = { action: 'search', onClick: () => uiStore.toggleSearchBar() };
     const moreButtonInfo = { action: 'more', onClick: () => setIsMoreDrawerOpen(true) };
     let res;
     if (tagId) {
-      res = await tagStore.fetchTagPageList(tagId, tempChannelId);
-      setPageList(res);
-      setChapterName('');
+      fetchTagPageList(tagId);
       return;
     }
     switch (navTab) {
@@ -229,32 +234,46 @@ const ChapterView: React.FC = observer(() => {
 
   // 첫 렌더를 제외한 편집 모드 설정/해제 이후
   useEffect(() => {
-    if (!chapterName) return;
-    if (!pageStore.isLongPressed) {
-      fetchList(chapterStore.currentId);
-      return;
+    if (!isTagChapter) {
+      if (!chapterName) return;
+      if (!pageStore.isLongPressed) {
+        fetchList(chapterStore.currentId);
+        return;
+      }
+      uiStore.setHeaderInfo({
+        title: `${getSelectedCount()}개 선택됨`,
+        leftSide: [{ action: 'close', onClick: handleCloseButtonPress }],
+        rightSide: [
+          { action: 'delete', onClick: handlePageDelete },
+          { action: 'share', onClick: () => setIsShareDrawerOpen(true) },
+          { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
+        ],
+      });
+    } else {
+      uiStore.setHeaderInfo({
+        title: '',
+        leftSide: [{ action: 'back' }],
+        rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
+      });
     }
-
-    uiStore.setHeaderInfo({
-      title: `${getSelectedCount()}개 선택됨`,
-      leftSide: [{ action: 'close', onClick: handleCloseButtonPress }],
-      rightSide: [
-        { action: 'delete', onClick: handlePageDelete },
-        { action: 'share', onClick: () => setIsShareDrawerOpen(true) },
-        { action: 'more', onClick: () => setIsMoreDrawerOpen(true) },
-      ],
-    });
   }, [pageStore.isLongPressed]);
 
   useLayoutEffect(() => {
-    if (id) {
-      localStorage.setItem('noteParam', id);
-      chapterStore.currentId = id;
+    if (id || tagId) {
+      localStorage.setItem('noteParam', id || tagId);
+      chapterStore.currentId = id || tagId;
     } else {
-      chapterStore.currentId = localStorage.getItem('noteParam');
+      // 새로고침 처음 했을 때
+      if (!chapterStore.currentId) chapterStore.currentId = localStorage.getItem('noteParam');
+      // 페이지에 들어갔다가 뒤로가기 수행하고 또 새로고침 했을 때
+      if (chapterStore.currentId !== localStorage.getItem('noteParam'))
+        localStorage.setItem('noteParam', chapterStore.currentId);
       if (isSearch) searchKeep();
+      if (isTagChapter) {
+        fetchTagPageList(chapterStore.currentId);
+        return;
+      }
     }
-
     fetchList(chapterStore.currentId);
   }, [navTab]);
 

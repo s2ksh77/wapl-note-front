@@ -70,7 +70,7 @@ const PageList: React.FC<Props> = ({ pageList, setPageList, isSelected, toggleSe
               isSelected={isSelected}
               handleItemPress={handleItemPress}
               handleBookmarkPress={handleBookmarkPress}
-              tagList={page.tagList ? page.tagList : []}
+              tagList={page.tagList}
             />
           </LongPressable>
           <PageItemDivider />

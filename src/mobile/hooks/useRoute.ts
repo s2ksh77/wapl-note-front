@@ -86,6 +86,7 @@ const useRoute = () => {
     isContent: window.location.pathname.includes(PANEL_PAGE),
     isSearch: window.location.pathname.includes(PANEL_SEARCH),
     isTag: window.location.pathname.includes(PANEL_TAG),
+    isTagChapter: window.location.pathname.includes(TAG_CHAPTER),
   };
 };
 

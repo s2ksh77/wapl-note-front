@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNoteStore, PageModel } from '@wapl/note-core';
 import { Icon, Checkbox, styled, Chip } from '@wapl/ui';
 import {
@@ -21,19 +22,28 @@ type Props = {
   handleItemPress: (id: string) => () => void;
   handleBookmarkPress: (id: string, favorite: boolean) => void;
   tagList?: Array<ITag>;
+  color?: string;
 };
 
-const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, handleBookmarkPress, tagList }) => {
+const PageItem: React.FC<Props> = ({ page, isSelected, handleItemPress, handleBookmarkPress, tagList, color }) => {
   const { pageStore } = useNoteStore();
+
+  const PageIcon = React.memo(() => {
+    switch (color) {
+      case 'SHARED_PAGE': // TODO: shared_page icon 다른건데 아직 없는건지 문의
+      case 'SHARED':
+        return <Icon.ShareLine width={20} height={20} />;
+      case 'RECYCLE_BIN': // TODO: 휴지통 조회할 때 개별.. color..
+        return null;
+      default:
+        return <Icon.PageFill width={20} height={20} color={color} />;
+    }
+  });
 
   return (
     <PageItemWrapper onClick={handleItemPress(page.id)}>
       <PageItemHeaderWrapper>
-        {pageStore.isLongPressed ? (
-          <Checkbox checked={isSelected(page.id)} />
-        ) : (
-          <Icon.PageFill width={20} height={20} color="#fcbb00" />
-        )}
+        {pageStore.isLongPressed ? <Checkbox checked={isSelected(page.id)} /> : <PageIcon />}
         <PageTitle>{page.name}</PageTitle>
         <PageBookmarkWrapper
           onClick={e => {
@@ -67,6 +77,7 @@ export default PageItem;
 
 PageItem.defaultProps = {
   tagList: [],
+  color: '',
 };
 
 const SChip = styled(Chip)`

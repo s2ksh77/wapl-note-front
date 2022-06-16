@@ -45,7 +45,7 @@ const SearchView: React.FC = () => {
           chapterList={searchResult?.chapterList}
           isSelected={id => false}
           toggleSelected={() => console.log('')}
-          showDivider
+          showDivider={false}
           panel="search_chapter"
         />
         <PageList pageList={searchResult?.pageList} />

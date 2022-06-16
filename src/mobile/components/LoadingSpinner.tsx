@@ -1,24 +1,15 @@
 import { styled } from '@wapl/ui';
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import { CHAPTER_DETAIL, MY_NOTE } from '../constant/routes';
+import { useLocation } from 'react-router-dom';
+import { PANEL_CHAPTER } from '../constant/routes';
 import { TLocation } from '../@types/common';
 
 const LoadingSpinner: React.FC = () => {
-  const { navTab } = useParams();
-  const location = useLocation() as TLocation;
+  const { pathname } = useLocation() as TLocation;
 
   const renderSkeleton = () => {
-    // path 포함하고 있는지 여부로 분리해야 될 듯
-    switch (location.pathname) {
-      case MY_NOTE:
-        return <Loader type="chapter" />;
-      case `${MY_NOTE}${CHAPTER_DETAIL}`: // TODO: myNote navTab 설정
-      case `/${navTab}${CHAPTER_DETAIL}`:
-        return <Loader type="page" />;
-      default:
-        return <Loader type="chapter" />;
-    }
+    if (pathname.includes(PANEL_CHAPTER)) return <Loader type="page" />;
+    return <Loader type="chapter" />;
   };
 
   const Loader: React.FC<{ size?: number; type?: string }> = React.memo(({ size = 5, type }) => {

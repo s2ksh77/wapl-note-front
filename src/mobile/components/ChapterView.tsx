@@ -36,7 +36,7 @@ const ChapterView: React.FC = observer(() => {
   const tagId = state?.tagId;
   const navigation = useNavigate();
   const { navTab } = useParams();
-  const { isSearch } = useRoute();
+  const { goBack, isSearch } = useRoute();
 
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount, getSelectedItems } = useMultiSelect();
   const [pageList, setPageList] = useState([]);
@@ -168,7 +168,7 @@ const ChapterView: React.FC = observer(() => {
       } else {
         await chapterStore.deleteChapter([new ChapterModel({ id })], tempChannelId);
         setIsDeleteDialogOpen(false);
-        navigation(-1);
+        goBack();
       }
     } catch (error) {
       console.log('chapter delete error', error);

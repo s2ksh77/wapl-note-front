@@ -56,6 +56,12 @@ const PageList: React.FC<Props> = ({ pageList, setPageList, isSelected, toggleSe
     } else setPageList(pageList.filter(page => page.id !== id));
   };
 
+  const getColor = page => {
+    if (page.color) return page.color;
+    if (page.shared) return 'SHARED';
+    return 'RECYCLE_BIN';
+  };
+
   return (
     <PageListWrapper isList={!!pageList?.length}>
       {pageList?.map(page => (
@@ -71,6 +77,7 @@ const PageList: React.FC<Props> = ({ pageList, setPageList, isSelected, toggleSe
               handleItemPress={handleItemPress}
               handleBookmarkPress={handleBookmarkPress}
               tagList={page.tagList}
+              color={getColor(page)}
             />
           </LongPressable>
           <PageItemDivider />

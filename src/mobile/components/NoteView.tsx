@@ -17,7 +17,6 @@ const ChapterList = React.lazy(() => import('@mcomponents/ChapterList'));
 const NoteView: React.FC = () => {
   const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
   const { noteViewStore, chapterStore, uiStore } = useNoteStore();
-  const [newChapterButtonVisible, setNewChapterButtonVisible] = useState(true);
   const [isNewChapterDialogOpen, setIsNewChapterDialogOpen] = useState(false);
   const [chapterList, setChapterList] = useState([]);
   const [sharedChapterList, setSharedChapterList] = useState([]);
@@ -135,12 +134,9 @@ const NoteView: React.FC = () => {
                     <ChapterList chapterList={recycleBin} showDivider={false} isRecycleBin />
                   </MenuList>
                 </Scrollable>
-
-                {newChapterButtonVisible && (
-                  <NewChapterButtonWrapper onClick={() => setIsNewChapterDialogOpen(true)}>
-                    <Icon.Add2Fill width={48} height={48} color="#FF6258" />
-                  </NewChapterButtonWrapper>
-                )}
+                <NewChapterButtonWrapper onClick={() => setIsNewChapterDialogOpen(true)}>
+                  <Icon.Add2Fill width={48} height={48} color="#FF6258" />
+                </NewChapterButtonWrapper>
                 <NewChapterDialog
                   open={isNewChapterDialogOpen}
                   title="새 챕터"

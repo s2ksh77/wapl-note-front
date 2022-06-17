@@ -11,7 +11,7 @@ const Navigation: React.FC = () => {
   const navTab = window.location.pathname.match(/(?<=note\/)[a-zA-Z0-9_.-]*/i)[0];
 
   const Selected = menu => {
-    return navTab === menu ? '#000000' : '#BDBDBD';
+    return navTab === menu ? '#222222' : '#BDBDBD';
   };
 
   const Navs = [

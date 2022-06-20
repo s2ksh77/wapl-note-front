@@ -10,7 +10,7 @@ import PageMoveView from '@mcomponents/PageMoveView';
 import { ContentWrapper, Scrollable, NewChapterButtonWrapper as NewPageButtonWrapper } from '@mstyles/ContentStyle';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@wapl/ui';
-import { useNoteStore, ChapterModel, PageModel } from '@wapl/note-core';
+import { useNoteStore, ChapterModel, PageModel, ChapterType } from '@wapl/note-core';
 import useMultiSelect from '../hooks/useMultiSelect';
 import { TLocation } from '../@types/common';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '../constant/routes';
@@ -40,8 +40,7 @@ const ChapterView: React.FC = observer(() => {
 
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount, getSelectedItems } = useMultiSelect();
   const [pageList, setPageList] = useState([]);
-  const [chapterName, setChapterName] = useState('');
-  const [newPageButtonVisible, setNewPageButtonVisible] = useState(true);
+  const [type, setType] = useState('');
   const [isShareDrawerOpen, setIsShareDrawerOpen] = useState(false);
   const [isMoreDrawerOpen, setIsMoreDrawerOpen] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -178,7 +177,6 @@ const ChapterView: React.FC = observer(() => {
   const fetchTagPageList = async tagId => {
     const res = await tagStore.fetchTagPageList(tagId, tempChannelId);
     setPageList(res);
-    setChapterName('');
     uiStore.setHeaderTitle('');
   };
 
@@ -194,7 +192,7 @@ const ChapterView: React.FC = observer(() => {
       case MENU_MYNOTE:
         res = await chapterStore.getChapterInfoList(id, tempChannelId);
         setPageList(res.pageList);
-        setChapterName(res.name);
+        setType(res.type);
         uiStore.setHeaderInfo({
           title: res.name,
           leftSide: [{ action: 'back' }],
@@ -207,7 +205,6 @@ const ChapterView: React.FC = observer(() => {
       case MENU_BOOKMARK:
         res = await pageStore.getBookmarkInChannel(tempChannelId);
         setPageList(res);
-        setChapterName('즐겨 찾기');
         uiStore.setHeaderInfo({
           title: '즐겨 찾기',
           rightSide: [searchButtonInfo],
@@ -216,7 +213,6 @@ const ChapterView: React.FC = observer(() => {
       case MENU_RECENT:
         res = await pageStore.getRecentList(tempChannelId, 10);
         setPageList(res);
-        setChapterName('최근');
         uiStore.setHeaderInfo({
           title: '최근',
           rightSide: [searchButtonInfo],
@@ -235,7 +231,7 @@ const ChapterView: React.FC = observer(() => {
   // 첫 렌더를 제외한 편집 모드 설정/해제 이후
   useEffect(() => {
     if (!isTagChapter) {
-      if (!chapterName) return;
+      if (!pageList.length) return;
       if (!pageStore.isLongPressed) {
         fetchList(chapterStore.currentId);
         return;
@@ -280,6 +276,10 @@ const ChapterView: React.FC = observer(() => {
   const searchKeep = () => {
     uiStore.setSearchKey(localStorage.getItem('searchKey'));
     localStorage.removeItem('searchKey');
+  };
+
+  const isNormalChapter = type => {
+    return type === ChapterType.DEFAULT || type === ChapterType.NOTEBOOK;
   };
 
   return (
@@ -327,7 +327,7 @@ const ChapterView: React.FC = observer(() => {
           <InputDialog
             open={isRenameDialogOpen}
             title="챕터 이름 변경"
-            value={chapterName}
+            value={uiStore.headerInfo.title}
             buttons={[
               {
                 variant: 'dismiss',
@@ -341,7 +341,6 @@ const ChapterView: React.FC = observer(() => {
                   setIsRenameDialogOpen(false);
                   try {
                     const res = await chapterStore.renameChapter(new ChapterModel({ id, name }), tempChannelId);
-                    setChapterName(res.name);
                     uiStore.setHeaderTitle(res.name);
                   } catch (error) {
                     console.log('renameChapter error', error);
@@ -376,11 +375,12 @@ const ChapterView: React.FC = observer(() => {
           />
         </>
       )}
-      {newPageButtonVisible && ( // TODO: 전달 받은 챕터, 휴지통 때 unvisible
-        <NewPageButtonWrapper onClick={handlePageCreate}>
-          <Icon.Add2Fill width={48} height={48} color="#FF6258" />
-        </NewPageButtonWrapper>
-      )}
+      {navTab === MENU_MYNOTE &&
+        isNormalChapter(type) && ( // TODO: 전달 받은 챕터, 휴지통 때 unvisible
+          <NewPageButtonWrapper onClick={handlePageCreate}>
+            <Icon.Add2Fill width={48} height={48} color="#FF6258" />
+          </NewPageButtonWrapper>
+        )}
     </ContentWrapper>
   );
 });

@@ -26,19 +26,22 @@ const NoteView: React.FC = () => {
   const [selectFilter, setSelectFilter] = useState('');
   const { isPending, isFullfilled, Suspense, setIsFullfilled } = useSuspense({ delay: 1000 });
 
-  const handleChapterCreate = useCallback(async name => {
-    // TODO: response 데이터 동기화
-    const res = await chapterStore.createChapter(
-      new ChapterModel({
-        color: chapterStore.RandomColor,
-        name,
-      }),
-      'ko',
-      tempChannelId,
-    );
-
-    setIsNewChapterDialogOpen(false);
-  }, []);
+  const handleChapterCreate = useCallback(
+    async name => {
+      try {
+        const res = await chapterStore.createChapter(
+          new ChapterModel({ color: chapterStore.RandomColor, name: name || '새 챕터' }),
+          'ko',
+          tempChannelId,
+        );
+        setChapterList([res, ...chapterList]);
+        setIsNewChapterDialogOpen(false);
+      } catch (error) {
+        console.log('chapter create error', error);
+      }
+    },
+    [chapterList],
+  );
 
   const handleClosePress = useCallback(() => {
     noteViewStore.toggleMultiSelectMode();

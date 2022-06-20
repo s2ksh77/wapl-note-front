@@ -1,6 +1,7 @@
 import { NavigationWrapper, Tabs } from '@mstyles/FooterStyle';
 import { Icon } from '@wapl/ui';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '@/mobile/constant/routes';
 import NavigationTabs from './NavigationTabs';
 import useRoute from '@/mobile/hooks/useRoute';
@@ -8,7 +9,7 @@ import useRoute from '@/mobile/hooks/useRoute';
 const Navigation: React.FC = () => {
   const navigate = useNavigate();
   const { isContent } = useRoute();
-  const navTab = window.location.pathname.match(/(?<=note\/)[a-zA-Z0-9_.-]*/i)[0];
+  const [navTab, setNavTab] = useState('');
 
   const Selected = menu => {
     return navTab === menu ? '#222222' : '#BDBDBD';
@@ -40,6 +41,11 @@ const Navigation: React.FC = () => {
       onClick: () => navigate(`${ROUTES.RECENT}${ROUTES.CHAPTER_DETAIL}`, { state: { panel: 'chapter' } }),
     },
   ];
+
+  useEffect(() => {
+    const match = window.location.pathname.match(/(?<=note\/)[a-zA-Z0-9_.-]*/i);
+    if (match) setNavTab(match[0]);
+  }, []);
 
   return (
     <NavigationWrapper isVisible={!isContent}>

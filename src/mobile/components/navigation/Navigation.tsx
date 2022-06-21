@@ -10,6 +10,7 @@ const Navigation: React.FC = () => {
   const navigate = useNavigate();
   const { isContent } = useRoute();
   const [navTab, setNavTab] = useState('');
+  const match = window.location.pathname.match(/(?<=note\/)[a-zA-Z0-9_.-]*/i);
 
   const Selected = menu => {
     return navTab === menu ? '#222222' : '#BDBDBD';
@@ -43,9 +44,8 @@ const Navigation: React.FC = () => {
   ];
 
   useEffect(() => {
-    const match = window.location.pathname.match(/(?<=note\/)[a-zA-Z0-9_.-]*/i);
     if (match) setNavTab(match[0]);
-  }, []);
+  }, [match]);
 
   return (
     <NavigationWrapper isVisible={!isContent}>

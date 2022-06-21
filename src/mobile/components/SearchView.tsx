@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { NoteViewBodyWrapper as SearchViewBodyWrapper, Scrollable, SearchResultWrapper } from '@mstyles/ContentStyle';
 import { useNoteStore } from '@wapl/note-core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MenuType, TLocation } from '../@types/common';
 import useRoute from '../hooks/useRoute';
@@ -17,9 +17,10 @@ const SearchView: React.FC = () => {
   const { handleSearch } = useSearch();
   const { isSearch } = useRoute();
   const [selectFilter, setSelectFilter] = useState('');
+  const searchResultRef = useRef();
 
   const SearchResultMarker = React.memo(({ children }) => {
-    return <div id="search-result">{children}</div>;
+    return <div ref={searchResultRef}>{children}</div>;
   });
 
   const RenderView = React.memo(() => {
@@ -89,7 +90,7 @@ const SearchView: React.FC = () => {
   }, [uiStore.isSearching]);
 
   useEffect(() => {
-    noteStore.setMarker(document.querySelector('#search-result'));
+    noteStore.setMarker(searchResultRef.current);
     noteStore.unmark({
       done: () => {
         noteStore.mark();

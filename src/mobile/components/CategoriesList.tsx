@@ -1,5 +1,5 @@
 // import { dummyTagList } from '@mdummies/tagList';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNoteStore } from '@wapl/note-core';
 import { observer } from 'mobx-react';
 import { Icon, Mui } from '@wapl/ui';
@@ -14,6 +14,7 @@ const CategoriesList: React.FC = observer(() => {
   const navigate = useNavigate();
   const { routeTo } = useRoute();
   const { tagStore, noteStore } = useNoteStore();
+  const searchResultRef = useRef();
 
   // 데이터 -> [KOR : [tagList], ENG : [tagList], NUM : [tagList], ETC : [tagList]
   const categoryinfo = {
@@ -31,11 +32,11 @@ const CategoriesList: React.FC = observer(() => {
   };
 
   const SearchResultMarker = React.memo(({ children }) => {
-    return <div id="search-result">{children}</div>;
+    return <div ref={searchResultRef}>{children}</div>;
   });
 
   useEffect(() => {
-    noteStore.setMarker(document.querySelector('#search-result'));
+    noteStore.setMarker(searchResultRef.current);
     noteStore.unmark({
       done: () => {
         noteStore.mark();

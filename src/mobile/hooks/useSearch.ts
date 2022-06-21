@@ -5,6 +5,7 @@ import { useNoteStore } from '@wapl/note-core';
 import { toJS } from 'mobx';
 import useRoute from './useRoute';
 import { PANEL_TAG } from '../constant/routes';
+import { RouteType } from '../@types/common';
 
 interface Props {
   getValue: string;
@@ -39,7 +40,7 @@ const useSearch = (): Props => {
     if (!pathname.includes(PANEL_TAG)) {
       const { chapterList, pageList, tagList } = await noteStore.getSearchList(searchKey, tempChannelId);
 
-      navigate(routeTo('search'), {
+      navigate(routeTo(RouteType.SEARCH), {
         state: { searchKey, searchResult: { chapterList, pageList, tagList } },
       });
       localStorage.setItem('searchKey', searchKey);

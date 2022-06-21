@@ -4,7 +4,17 @@ import { Header, useRoomStore } from '@wapl/core';
 import { LoadingSpinner, styled } from '@wapl/ui';
 import { StoreProvider } from '@wapl/note-core';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ROUTES, SEARCH_CHAPTER, SEARCH_PAGE, SEARCH_TAG, TAG_CHAPTER, TAG_PAGE } from '@mconstant/routes';
+import {
+  PANEL_CHAPTER,
+  PANEL_PAGE,
+  PANEL_TAG,
+  ROUTES,
+  SEARCH_CHAPTER,
+  SEARCH_PAGE,
+  SEARCH_TAG,
+  TAG_CHAPTER,
+  TAG_PAGE,
+} from '@mconstant/routes';
 import NoteHeader from '@mcomponents/header/NoteHeader';
 import Navigation from '@mcomponents/navigation/Navigation';
 
@@ -55,6 +65,10 @@ const AppContainer = () => {
                 <Route path={`/:navTab${SEARCH_TAG}`} element={<TagMenuView />} />
                 <Route path={`/:navTab${TAG_CHAPTER}`} element={<ChapterView />} />
                 <Route path={`/:navTab${TAG_PAGE}`} element={<PageView />} />
+                <Route path={`${ROUTES.TALK_NOTE}/:chId`} element={<NoteView />} />
+                <Route path={`${ROUTES.TALK_NOTE}/:chId${ROUTES.CHAPTER_DETAIL}`} element={<ChapterView />} />
+                <Route path={`${ROUTES.TALK_NOTE}/:chId${ROUTES.PAGE_DETAIL}`} element={<PageView />} />
+                <Route path={`${ROUTES.TALK_NOTE}/:chId${ROUTES.TAG_DETAIL}`} element={<TagMenuView />} />
               </Routes>
               <Navigation />
             </Suspense>

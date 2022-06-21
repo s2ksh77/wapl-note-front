@@ -6,7 +6,7 @@ import ChapterItem from '@mcomponents/ChapterItem';
 import { NoteViewChapterListWrapper } from '@mstyles/ListItemStyle';
 import { useNavigate } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
-import { SelectType } from '../@types/common';
+import { RouteType, SelectType } from '../@types/common';
 
 // fixme: interface들은 나중에 core로 빼기
 export interface IChapter {
@@ -23,11 +23,10 @@ type Props = {
   isSelected?: (value: string) => boolean;
   toggleSelected?: (value: string) => void;
   isRecycleBin?: boolean;
-  panel?: string;
 };
 
 const ChapterList: React.FC<Props> = observer(
-  ({ chapterList, isSelected, toggleSelected, showDivider, isRecycleBin, panel = 'page' }) => {
+  ({ chapterList, isSelected, toggleSelected, showDivider, isRecycleBin }) => {
     const navigate = useNavigate();
     const { noteViewStore, uiStore } = useNoteStore();
     const { routeTo } = useRoute();
@@ -48,7 +47,7 @@ const ChapterList: React.FC<Props> = observer(
 
     const handleItemPress = id => () => {
       if (noteViewStore.isLongPressed) return;
-      navigate(routeTo(panel), {
+      navigate(routeTo(RouteType.PRESS_CHAPTER), {
         state: { panel: 'page', id, isRecycleBin },
       });
       // search에서 클릭시 뒤로가기 토글
@@ -89,5 +88,4 @@ ChapterList.defaultProps = {
     return false;
   },
   isRecycleBin: false,
-  panel: 'page',
 };

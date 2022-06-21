@@ -370,3 +370,8 @@ export const ModifiedInfoWrapper = styled.div`
 export const TitleWrapper = styled(ModifiedInfoWrapper)`
   padding: 0 16px;
 `;
+
+export const TagExpandIconWrapper = styled.div`
+  margin: 0px;
+  padding: 0px;
+`;

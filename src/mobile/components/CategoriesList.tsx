@@ -31,10 +31,6 @@ const CategoriesList: React.FC = observer(() => {
     localStorage.setItem('noteParam', tagId);
   };
 
-  const SearchResultMarker = React.memo(({ children }) => {
-    return <div ref={searchResultRef}>{children}</div>;
-  });
-
   useEffect(() => {
     noteStore.setMarker(searchResultRef.current);
     noteStore.unmark({
@@ -46,34 +42,32 @@ const CategoriesList: React.FC = observer(() => {
 
   return (
     <CategoriesWrapper style={{ flexDirection: 'column' }}>
-      <SearchResultMarker>
-        <div style={{ overflowY: 'auto' }}>
-          {Object.entries(tagStore.sortedTagList).map(([category, values]) => {
-            return (
-              <Mui.Accordion style={{ margin: 0, minHeight: 64 }} key={category} expanded={!!values}>
-                <Mui.AccordionSummary
-                  expandIcon={<Icon.ArrowBottomLine />}
-                  aria-controls="panel1a-content"
-                  style={{ minHeight: 64 }}
-                >
-                  <Mui.Typography>{categoryinfo[category]}</Mui.Typography>
-                </Mui.AccordionSummary>
-                {values
-                  ? Object.entries(values)?.map(([tagKey, tagList]: [string, any]) => {
-                      return (
-                        <>
-                          <CategoryIndex key={tagKey}>{tagKey}</CategoryIndex>
-                          {/* {<Chips chipList={tag} />} */}
-                          <TagChipContainer tagList={tagList} handlePressTag={handlePressTag} />
-                        </>
-                      );
-                    })
-                  : ''}
-              </Mui.Accordion>
-            );
-          })}
-        </div>
-      </SearchResultMarker>
+      <div ref={searchResultRef} style={{ overflowY: 'auto' }}>
+        {Object.entries(tagStore.sortedTagList).map(([category, values]) => {
+          return (
+            <Mui.Accordion style={{ margin: 0, minHeight: 64 }} key={category} expanded={!!values}>
+              <Mui.AccordionSummary
+                expandIcon={<Icon.ArrowBottomLine />}
+                aria-controls="panel1a-content"
+                style={{ minHeight: 64 }}
+              >
+                <Mui.Typography>{categoryinfo[category]}</Mui.Typography>
+              </Mui.AccordionSummary>
+              {values
+                ? Object.entries(values)?.map(([tagKey, tagList]: [string, any]) => {
+                    return (
+                      <>
+                        <CategoryIndex key={tagKey}>{tagKey}</CategoryIndex>
+                        {/* {<Chips chipList={tag} />} */}
+                        <TagChipContainer tagList={tagList} handlePressTag={handlePressTag} />
+                      </>
+                    );
+                  })
+                : ''}
+            </Mui.Accordion>
+          );
+        })}
+      </div>
     </CategoriesWrapper>
   );
 });

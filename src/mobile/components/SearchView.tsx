@@ -19,10 +19,6 @@ const SearchView: React.FC = () => {
   const [selectFilter, setSelectFilter] = useState('');
   const searchResultRef = useRef();
 
-  const SearchResultMarker = React.memo(({ children }) => {
-    return <div ref={searchResultRef}>{children}</div>;
-  });
-
   const RenderView = React.memo(() => {
     if (!selectFilter) return <RenderAll />;
     switch (selectFilter) {
@@ -102,10 +98,8 @@ const SearchView: React.FC = () => {
     <SearchViewBodyWrapper>
       <FilterChipContainer selectFilter={selectFilter} setSelectFilter={setSelectFilter} />
       <Scrollable>
-        <SearchResultWrapper>
-          <SearchResultMarker>
-            <RenderView />
-          </SearchResultMarker>
+        <SearchResultWrapper ref={searchResultRef}>
+          <RenderView />
         </SearchResultWrapper>
       </Scrollable>
     </SearchViewBodyWrapper>

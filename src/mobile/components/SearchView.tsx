@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { NoteViewBodyWrapper as SearchViewBodyWrapper, Scrollable, SearchResultWrapper } from '@mstyles/ContentStyle';
 import { useNoteStore } from '@wapl/note-core';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MenuType, TLocation } from '../@types/common';
 import useRoute from '../hooks/useRoute';
@@ -13,10 +13,11 @@ import PageList from './PageList';
 const SearchView: React.FC = () => {
   const { state } = useLocation() as TLocation;
   const searchResult = state?.searchResult;
-  const { uiStore } = useNoteStore();
+  const { uiStore, noteStore } = useNoteStore();
   const { handleSearch } = useSearch();
   const { isSearch } = useRoute();
   const [selectFilter, setSelectFilter] = useState('');
+  const searchResultRef = useRef();
 
   const RenderView = React.memo(() => {
     if (!selectFilter) return <RenderAll />;
@@ -84,11 +85,20 @@ const SearchView: React.FC = () => {
     if (!uiStore.isSearching) uiStore.toggleSearchBar();
   }, [uiStore.isSearching]);
 
+  useEffect(() => {
+    noteStore.setMarker(searchResultRef.current);
+    noteStore.unmark({
+      done: () => {
+        noteStore.mark();
+      },
+    });
+  });
+
   return (
     <SearchViewBodyWrapper>
       <FilterChipContainer selectFilter={selectFilter} setSelectFilter={setSelectFilter} />
       <Scrollable>
-        <SearchResultWrapper>
+        <SearchResultWrapper ref={searchResultRef}>
           <RenderView />
         </SearchResultWrapper>
       </Scrollable>

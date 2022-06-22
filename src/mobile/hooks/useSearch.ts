@@ -36,6 +36,7 @@ const useSearch = (): Props => {
     // hook이기 때문에 상태가 새로 불리면서 useRoute 관련 state가 초기화가 됨.
     // 그래서 window.location 사용
     const { pathname } = window.location;
+    noteStore.setSearchKeyword(searchKey);
     if (!pathname.includes(PANEL_TAG)) {
       const { chapterList, pageList, tagList } = await noteStore.getSearchList(searchKey, tempChannelId);
 
@@ -57,6 +58,7 @@ const useSearch = (): Props => {
   const handleCancel = useCallback(async (fn: () => void) => {
     const { pathname } = window.location;
     setSearchValue('');
+    noteStore.endSearching();
     fn();
     if (localStorage.getItem('searchKey')) localStorage.removeItem('searchKey');
     if (pathname.includes(PANEL_TAG)) await tagStore.fetchSortedTagList(tempChannelId);

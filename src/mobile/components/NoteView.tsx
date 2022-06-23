@@ -84,7 +84,7 @@ const NoteView: React.FC = () => {
   useEffect(() => {
     if (!noteViewStore.isLongPressed) {
       uiStore.setHeaderInfo({
-        title: !title ? '내 노트' : title,
+        title: title || '내 노트',
         leftSide: !title ? [] : [{ action: 'back' }],
         rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
       });

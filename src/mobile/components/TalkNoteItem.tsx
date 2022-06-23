@@ -26,3 +26,9 @@ const TalkNoteItem: React.FC<Props> = ({ room, photo, name, userCount, handleIte
 };
 
 export default TalkNoteItem;
+
+TalkNoteItem.defaultProps = {
+  handleItemPress: () => () => {
+    return null;
+  },
+};

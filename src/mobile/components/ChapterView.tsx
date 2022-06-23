@@ -252,7 +252,7 @@ const ChapterView: React.FC = observer(() => {
         rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
       });
     }
-  }, [pageStore.isLongPressed]);
+  }, [pageStore.isLongPressed, getSelectedCount]);
 
   useLayoutEffect(() => {
     if (id || tagId) {

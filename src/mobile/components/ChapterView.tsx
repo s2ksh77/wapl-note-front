@@ -222,12 +222,6 @@ const ChapterView: React.FC = observer(() => {
     }
   };
 
-  // 편집 모드에서 선택된 페이지 수 업데이트
-  useEffect(() => {
-    if (!pageStore.isLongPressed) return;
-    uiStore.setHeaderTitle(`${getSelectedCount()}개 선택됨`);
-  }, [getSelectedCount]);
-
   // 첫 렌더를 제외한 편집 모드 설정/해제 이후
   useEffect(() => {
     if (!isTagChapter) {

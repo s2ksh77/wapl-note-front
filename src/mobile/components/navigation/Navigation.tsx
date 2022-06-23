@@ -2,7 +2,14 @@ import { NavigationWrapper, Tabs } from '@mstyles/FooterStyle';
 import { Icon } from '@wapl/ui';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '@/mobile/constant/routes';
+import {
+  CHAPTER_DETAIL,
+  MENU_BOOKMARK,
+  MENU_MYNOTE,
+  MENU_RECENT,
+  MENU_TALKNOTE,
+  ROUTES,
+} from '@/mobile/constant/routes';
 import NavigationTabs from './NavigationTabs';
 import useRoute from '@/mobile/hooks/useRoute';
 
@@ -33,13 +40,13 @@ const Navigation: React.FC = () => {
       key: 'bookmark',
       icon: <Icon.BookmarkFill color={Selected(MENU_BOOKMARK)} />,
       text: '즐겨찾기',
-      onClick: () => navigate(`${ROUTES.BOOKMARK}${ROUTES.CHAPTER_DETAIL}`, { state: { panel: 'chapter' } }),
+      onClick: () => navigate(`${ROUTES.BOOKMARK}${CHAPTER_DETAIL}`, { state: { panel: 'chapter' } }),
     },
     {
       key: 'recent',
       icon: <Icon.TimeFill color={Selected(MENU_RECENT)} />,
       text: '최근',
-      onClick: () => navigate(`${ROUTES.RECENT}${ROUTES.CHAPTER_DETAIL}`, { state: { panel: 'chapter' } }),
+      onClick: () => navigate(`${ROUTES.RECENT}${CHAPTER_DETAIL}`, { state: { panel: 'chapter' } }),
     },
   ];
 

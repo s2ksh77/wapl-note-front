@@ -4,19 +4,12 @@ import { Header, useRoomStore } from '@wapl/core';
 import { LoadingSpinner, styled } from '@wapl/ui';
 import { StoreProvider } from '@wapl/note-core';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import {
-  PANEL_CHAPTER,
-  PANEL_PAGE,
-  PANEL_TAG,
-  ROUTES,
-  SEARCH_CHAPTER,
-  SEARCH_PAGE,
-  SEARCH_TAG,
-  TAG_CHAPTER,
-  TAG_PAGE,
-} from '@mconstant/routes';
+import { ROUTES } from '@mconstant/routes';
 import NoteHeader from '@mcomponents/header/NoteHeader';
 import Navigation from '@mcomponents/navigation/Navigation';
+import { TagRouteView } from './mobile/components/route/TagRouteView';
+import { SearchRouteView } from './mobile/components/route/SearchRouteView';
+import { TalkRouteView } from './mobile/components/route/TalkRouteView';
 
 const handleMount = () => {
   console.log('Mounted!');
@@ -37,9 +30,6 @@ const AppContainer = () => {
   const NoteView = React.lazy(() => import('@mcomponents/NoteView'));
   const ChapterView = React.lazy(() => import('@mcomponents/ChapterView'));
   const PageView = React.lazy(() => import('@mcomponents/PageView'));
-  const SearchView = React.lazy(() => import('@mcomponents/SearchView'));
-  const TagMenuView = React.lazy(() => import('@mcomponents/TagMenuView'));
-  const TalkNoteView = React.lazy(() => import('@mcomponents/TalkNoteView'));
 
   return (
     <Application onMount={handleMount} onUnmount={handleUnMount} onError={handleOnError}>
@@ -53,22 +43,15 @@ const AppContainer = () => {
               <Routes>
                 <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.MY_NOTE} />} />
                 <Route path={ROUTES.MY_NOTE} element={<NoteView />} />
-                <Route path={ROUTES.TALK_NOTE} element={<TalkNoteView />} />
+                <Route path={`${ROUTES.TALK_NOTE}/*`} element={<TalkRouteView />} />
                 <Route path={ROUTES.BOOKMARK} element={<ChapterView />} />
                 <Route path={ROUTES.RECENT} element={<ChapterView />} />
-                <Route path={`/:navTab${ROUTES.CHAPTER_DETAIL}`} element={<ChapterView />} />
-                <Route path={`/:navTab${ROUTES.PAGE_DETAIL}`} element={<PageView />} />
-                <Route path={`/:navTab${ROUTES.TAG_DETAIL}`} element={<TagMenuView />} />
-                <Route path={`/:navTab${ROUTES.SEARCH_DETAIL}`} element={<SearchView />} />
-                <Route path={`/:navTab${SEARCH_CHAPTER}`} element={<ChapterView />} />
-                <Route path={`/:navTab${SEARCH_PAGE}`} element={<PageView />} />
-                <Route path={`/:navTab${SEARCH_TAG}`} element={<TagMenuView />} />
-                <Route path={`/:navTab${TAG_CHAPTER}`} element={<ChapterView />} />
-                <Route path={`/:navTab${TAG_PAGE}`} element={<PageView />} />
-                <Route path={`${ROUTES.TALK_NOTE}/:chId`} element={<NoteView />} />
-                <Route path={`${ROUTES.TALK_NOTE}/:chId${ROUTES.CHAPTER_DETAIL}`} element={<ChapterView />} />
-                <Route path={`${ROUTES.TALK_NOTE}/:chId${ROUTES.PAGE_DETAIL}`} element={<PageView />} />
-                <Route path={`${ROUTES.TALK_NOTE}/:chId${ROUTES.TAG_DETAIL}`} element={<TagMenuView />} />
+                <Route path="/:navTab/*">
+                  <Route path={`${ROUTES.CHAPTER}`} element={<ChapterView />} />
+                  <Route path={`${ROUTES.PAGE}`} element={<PageView />} />
+                  <Route path={`${ROUTES.TAG}/*`} element={<TagRouteView />} />
+                  <Route path={`${ROUTES.SEARCH}/*`} element={<SearchRouteView />} />
+                </Route>
               </Routes>
               <Navigation />
             </Suspense>

@@ -10,6 +10,7 @@ import TagChipContainer from './TagChipContainer';
 import useRoute from '../hooks/useRoute';
 import useExpand from '../hooks/useExpand';
 import { TAG_CHAPTER } from '../constant/routes';
+import { RouteType } from '../@types/common';
 
 const CategoriesList: React.FC = observer(() => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const CategoriesList: React.FC = observer(() => {
   };
 
   const handlePressTag = (tagId: string) => async () => {
-    navigate(routeTo(TAG_CHAPTER), {
+    navigate(routeTo(RouteType.PRESS_CHAPTER), {
       state: { tagId },
     });
     localStorage.setItem('noteParam', tagId);

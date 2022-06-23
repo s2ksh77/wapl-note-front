@@ -12,7 +12,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@wapl/ui';
 import { useNoteStore, ChapterModel, PageModel, ChapterType } from '@wapl/note-core';
 import useMultiSelect from '../hooks/useMultiSelect';
-import { TLocation } from '../@types/common';
+import { RouteType, TLocation } from '../@types/common';
 import { MENU_BOOKMARK, MENU_MYNOTE, MENU_RECENT, MENU_TALKNOTE, ROUTES } from '../constant/routes';
 import LoadingSpinner, { PageLoadingSpinnerWrapper } from './LoadingSpinner';
 import useRoute from '../hooks/useRoute';
@@ -36,7 +36,7 @@ const ChapterView: React.FC = observer(() => {
   const tagId = state?.tagId;
   const navigation = useNavigate();
   const { navTab } = useParams();
-  const { goBack, isSearch, isTagChapter } = useRoute();
+  const { goBack, isSearch, isTagChapter, routeTo } = useRoute();
 
   const { isSelected, toggleSelected, selectAll, deSelectAll, getSelectedCount, getSelectedItems } = useMultiSelect();
   const [pageList, setPageList] = useState([]);
@@ -135,7 +135,7 @@ const ChapterView: React.FC = observer(() => {
         createdUserId: 'caf1a998-c39e-49d4-81c7-719f6cc624d9',
       }),
     );
-    navigation(`/${pathname.split('/')[1]}${ROUTES.PAGE_DETAIL}`, {
+    navigation(routeTo(RouteType.PRESS_PAGE), {
       state: { panel: 'content', isNewPage: true },
     });
   };

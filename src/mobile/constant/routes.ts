@@ -1,5 +1,4 @@
 const HOME = '/';
-const APP = '/note';
 export const CHAPTER_DETAIL = '/chapter';
 export const PAGE_DETAIL = '/page';
 export const TAG_DETAIL = '/tag';
@@ -28,34 +27,17 @@ export const PANEL_SEARCH_CHAPTER = 'search_chapter';
 export const PANEL_SEARCH_PAGE = 'search_page';
 export const PANEL_SEARCH_TAG = 'search_tag';
 
+export const CHAPTER = 'chapter';
+export const PAGE = 'page';
+export const TAG = 'tag';
+export const SEARCH = 'search';
+
 export const ROUTES = {
   HOME,
-  APP,
-  CHAPTER_DETAIL,
-  PAGE_DETAIL,
-  TAG_DETAIL,
-  SEARCH_DETAIL,
-  SEARCH_TALKROOM,
-  SEARCH_CHAPTER,
-  SEARCH_PAGE,
-  SEARCH_TAG,
-  search_talkroomDetail: id => {
-    // TODO: 중복 최적화
-    if (id) return `${SEARCH_TALKROOM}/${id}`;
-    return SEARCH_TALKROOM;
-  },
-  search_chapterDetail: id => {
-    if (id) return `${SEARCH_CHAPTER}/${id}`;
-    return SEARCH_CHAPTER;
-  },
-  search_pageDetail: id => {
-    if (id) return `${SEARCH_PAGE}/${id}`;
-    return SEARCH_PAGE;
-  },
-  search_tagDetail: id => {
-    if (id) return `${SEARCH_TAG}/${id}`;
-    return SEARCH_TAG;
-  },
+  CHAPTER,
+  PAGE,
+  TAG,
+  SEARCH,
   MY_NOTE,
   TALK_NOTE,
   BOOKMARK,

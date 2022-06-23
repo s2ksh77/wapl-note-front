@@ -28,7 +28,6 @@ const SearchView: React.FC = () => {
             chapterList={searchResult?.chapterList}
             isSelected={id => false}
             toggleSelected={() => console.log('')}
-            panel="search_chapter"
           />
         );
       case MenuType.PAGE:
@@ -47,7 +46,6 @@ const SearchView: React.FC = () => {
           isSelected={id => false}
           toggleSelected={() => console.log('')}
           showDivider={false}
-          panel="search_chapter"
         />
         <PageList pageList={searchResult?.pageList} />
         <PageList pageList={searchResult?.tagList} />

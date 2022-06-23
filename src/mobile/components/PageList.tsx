@@ -8,6 +8,7 @@ import { PageListWrapper, PageItemDivider } from '@mstyles/ListItemStyle';
 import { useNavigate, useParams } from 'react-router-dom';
 import useRoute from '@mhooks/useRoute';
 import { BOOKMARK, MENU_BOOKMARK } from '../constant/routes';
+import { RouteType } from '../@types/common';
 
 interface ITag {
   id: string;
@@ -41,7 +42,7 @@ const PageList: React.FC<Props> = ({ pageList, setPageList, isSelected, toggleSe
 
   const handleItemPress = id => () => {
     if (pageStore.isLongPressed) return;
-    navigate(routeTo('content'), {
+    navigate(routeTo(RouteType.PRESS_PAGE), {
       state: { id, ...{ panel: 'content', isNewPage: false, isRecycleBin } },
     });
     // search에서 클릭시 뒤로가기 토글

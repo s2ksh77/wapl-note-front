@@ -1,53 +1,47 @@
 /* eslint-disable consistent-return */
-import { useCallback } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { TLocation } from '@mcomponents/header/NoteHeader';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
-  MY_NOTE,
   SEARCH_DETAIL,
-  PANEL_CHAPTER,
-  PANEL_CONTENT,
   PANEL_PAGE,
-  PANEL_SEARCH_CHAPTER,
-  PANEL_SEARCH_PAGE,
   PANEL_SEARCH,
   CHAPTER_DETAIL,
   PAGE_DETAIL,
   TAG_DETAIL,
   TAG_CHAPTER,
-  TAG_PAGE,
   PANEL_TAG,
+  MY_NOTE,
 } from '@mconstant/routes';
+import { RouteType } from '../@types/common';
 
 const useRoute = () => {
   const navigate = useNavigate();
-  const { navTab } = useParams();
+  const { chId } = useParams();
 
   const navPath = useCallback(() => {
-    if (!navTab) return MY_NOTE;
-    return `/${navTab}`;
-  }, [navTab]);
+    const { pathname } = window.location;
+    const navTab = `/${pathname.match(/(?<=note\/)[a-zA-Z0-9_.-]*/i)[0]}`;
+    return chId ? `${navTab}/${chId}` : navTab;
+  }, [window.location.pathname]);
 
-  const panelPath = useCallback((panel: string) => {
-    switch (panel) {
-      case PANEL_CHAPTER:
-        return '';
-      case PANEL_PAGE:
-        return CHAPTER_DETAIL;
-      case PANEL_SEARCH:
-        return '';
-      case PANEL_TAG:
-        return TAG_DETAIL;
-      case PANEL_CONTENT:
-        return PAGE_DETAIL;
-      case TAG_CHAPTER:
-      case PANEL_SEARCH_CHAPTER:
-        return CHAPTER_DETAIL;
-      case TAG_PAGE:
-      case PANEL_SEARCH_PAGE:
-        return PAGE_DETAIL;
+  const isSearch = window.location.pathname.includes(PANEL_SEARCH);
+  const isTag = window.location.pathname.includes(PANEL_TAG);
+
+  const getPath = useCallback((routeType: string) => {
+    switch (routeType) {
+      case RouteType.PRESS_CHAPTER:
+        if (isSearch) return `${SEARCH_DETAIL}${CHAPTER_DETAIL}`;
+        if (isTag) return `${TAG_DETAIL}${CHAPTER_DETAIL}`;
+        return `${CHAPTER_DETAIL}`;
+      case RouteType.PRESS_PAGE:
+        if (isSearch) return `${SEARCH_DETAIL}${PAGE_DETAIL}`;
+        if (isTag) return `${TAG_DETAIL}${PAGE_DETAIL}`;
+        return `${PAGE_DETAIL}`;
+      case RouteType.PRESS_TAG:
+        return `${TAG_DETAIL}`;
+      case RouteType.SEARCH:
+        return `${SEARCH_DETAIL}`;
       default:
-        return '';
     }
   }, []);
 
@@ -64,17 +58,9 @@ const useRoute = () => {
     panel (chapter, page, tag)
    */
 
-  const routeTo = useCallback(
-    (panel?: string) => {
-      const { pathname } = window.location;
-      if (pathname === navPath() && !panel) return pathname; // case 1
-      if (panel !== 'search' && !pathname.includes(SEARCH_DETAIL) && !pathname.includes(TAG_DETAIL))
-        return `${navPath()}${panelPath(panel)}`; // case 2
-      if (pathname.includes(TAG_DETAIL)) return `${navPath()}${TAG_DETAIL}${panelPath(panel)}`; // case 4
-      return `${navPath()}${SEARCH_DETAIL}${panelPath(panel)}`; // case 3
-    },
-    [navPath, panelPath, window.location.pathname],
-  );
+  const routeTo = useCallback((routeType: string) => {
+    return `${navPath()}${getPath(routeType)}`;
+  }, []);
 
   const goBack = useCallback(() => {
     navigate(-1);

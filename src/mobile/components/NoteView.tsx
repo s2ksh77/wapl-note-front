@@ -7,15 +7,21 @@ import { NoteViewBodyWrapper, Scrollable, NewChapterButtonWrapper } from '@mstyl
 import MenuList from '@mcomponents/MenuList';
 import NewChapterDialog from '@mcomponents/dialog/InputDialog';
 import { useNoteStore, ChapterModel } from '@wapl/note-core';
+import { useLocation, useParams } from 'react-router-dom';
 import useSuspense from '@/mobile/hooks/useSuspense';
 import useMultiSelect from '../hooks/useMultiSelect';
 import LoadingSpinner from './LoadingSpinner';
 import FilterChipContainer from './FilterChipContainer';
+import { TLocation } from '../@types/common';
 
 const ChapterList = React.lazy(() => import('@mcomponents/ChapterList'));
 
 const NoteView: React.FC = () => {
-  const tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
+  let tempChannelId = '79b3f1b3-85dc-4965-a8a2-0c4c56244b82';
+  const { state } = useLocation() as TLocation;
+  const { chId } = useParams();
+  if (chId) tempChannelId = chId;
+  const title = state?.name;
   const { noteViewStore, chapterStore, uiStore } = useNoteStore();
   const [isNewChapterDialogOpen, setIsNewChapterDialogOpen] = useState(false);
   const [chapterList, setChapterList] = useState([]);
@@ -78,7 +84,8 @@ const NoteView: React.FC = () => {
   useEffect(() => {
     if (!noteViewStore.isLongPressed) {
       uiStore.setHeaderInfo({
-        title: '내 노트',
+        title: title || '내 노트',
+        leftSide: !title ? [] : [{ action: 'back' }],
         rightSide: [{ action: 'search', onClick: () => uiStore.toggleSearchBar() }],
       });
       return;
